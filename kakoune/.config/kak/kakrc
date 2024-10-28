@@ -161,19 +161,20 @@ define-command -override run -shell-completion -params .. -docstring 'run comman
 
 
 declare-user-mode find-actions
-map global find-actions -docstring 'pick buffer'                       'B' ':open_buffer_picker<ret>'
-map global find-actions -docstring 'terminal'                          't' ':kks-connect terminal-vertical fish<ret>'
-map global find-actions -docstring 'files'                             'f' ':kks-connect terminal-popup kks-files<ret>'
-map global find-actions -docstring 'git files'                         'g' ':kks-connect terminal-popup kks-git-files<ret>'
-map global find-actions -docstring 'git changed files'                 'd' ':kks-connect terminal-popup kks-git-changed-files<ret>'
-map global find-actions -docstring 'buffers'                           'b' ':kks-connect terminal-popup kks-buffers<ret>'
-map global find-actions -docstring 'live grep(fzf)'                    'w' ':kks-connect terminal-popup kks-grep<ret>'
-map global find-actions -docstring 'browse file on github'             'B' ':browse_github<ret>'
-map global find-actions -docstring 'file types'                        'y' ':kks-connect terminal-popup kks-filetypes<ret>'
-map global find-actions -docstring 'file inside buffer basefolder'     'p' ':basefolder-files<ret>'
-map global find-actions -docstring 'file under buffer basefolder'      'P' ':basefolder-top-files<ret>'
-map global find-actions -docstring 'edit file under buffer basefolder' 'e' ':basefolder-edit<ret>'
+map global find-actions -docstring 'pick buffer'                       'B'  ':open_buffer_picker<ret>'
+map global find-actions -docstring 'terminal'                          't'  ':kks-connect terminal-vertical fish<ret>'
+map global find-actions -docstring 'files'                             'f'  ':kks-connect terminal-popup kks-files<ret>'
+map global find-actions -docstring 'git files'                         'g'  ':kks-connect terminal-popup kks-git-files<ret>'
+map global find-actions -docstring 'git changed files'                 'd'  ':kks-connect terminal-popup kks-git-changed-files<ret>'
+map global find-actions -docstring 'buffers'                           'b'  ':kks-connect terminal-popup kks-buffers<ret>'
+map global find-actions -docstring 'live grep(fzf)'                    'w'  ':kks-connect terminal-popup kks-grep<ret>'
+map global find-actions -docstring 'browse file on github'             'B'  ':browse_github<ret>'
+map global find-actions -docstring 'file types'                        'y'  ':kks-connect terminal-popup kks-filetypes<ret>'
+map global find-actions -docstring 'file inside buffer basefolder'     'p'  ':basefolder-files<ret>'
+map global find-actions -docstring 'file under buffer basefolder'      'P'  ':basefolder-top-files<ret>'
+map global find-actions -docstring 'edit file under buffer basefolder' 'e'  ':basefolder-edit<ret>'
 map global find-actions -docstring 'switch themes'                      'S' ':colorscheme<space>'
+map global find-actions -docstring 'pr changed files'                  'c'  ':kks-connect terminal-popup kks-pr-diff-files<ret>'
 
 define-command basefolder-files -docstring 'file inside buffer basefolder' %{
 	evaluate-commands %sh{
