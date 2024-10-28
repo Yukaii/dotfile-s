@@ -357,6 +357,26 @@ hook global BufCreate .*\.tmux.conf %{
     set-option buffer filetype conf
 }
 
+hook global WinSetOption filetype=(json|javascript|typescript) %{
+    define-command flip-boolean %{
+        try %{
+          execute-keys '<a-i>w'
+          evaluate-commands %sh{
+              word=${kak_selection}
+              echo "info $word"
+              if [[ "$word" == "true" ]]; then
+                  printf "execute-keys c%s<esc>blh" "false"
+              elif [[ "$word" == "false" ]]; then
+                  printf "execute-keys c%s<esc>blh" "true"
+              else
+                  exit 1
+              fi
+          }
+        }
+    }
+    map global normal <ret> ':flip-boolean<ret>'
+}
+
 
 # Switch cursor color in insert mode
 # ──────────────────────────────────
