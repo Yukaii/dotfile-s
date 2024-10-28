@@ -244,6 +244,11 @@ map global object D '<a-semicolon>lsp-diagnostic-object<ret>'                   
 
 set-option global lsp_auto_show_code_actions true
 
+# More objecct mapping from https://discuss.kakoune.com/t/useful-objects/58
+map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>,<lt>/([\w.]+)\b[^>]*?(?<lt>!/)><ret>}
+map global object h 'c<gt>,<lt><ret>' -docstring "select in the (html) angle brackets"
+map global object o 'c\s,\s<ret>'     -docstring "select inbetween the whitespace"
+
 
 # Wrap line movement
 define-command -hidden unset-j %{
