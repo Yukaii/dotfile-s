@@ -206,9 +206,11 @@ map global window-actions 'l' ':focus-right<ret>' -docstring 'focus right pane'
 declare-user-mode buffer-actions
 map global buffer-actions '[' ':bp<ret>' -docstring 'previous buffer'
 map global buffer-actions ']' ':bn<ret>' -docstring 'next buffer'
-map global buffer-actions 'c' ':db<ret>' -docstring 'close buffer'
 map global buffer-actions 'l' ':b<space>' -docstring 'list buffer'
 map global buffer-actions '.' ':enter-user-mode buffer-actions -lock<ret>' -docstring 'Lock'
+
+map global goto n '<esc>:bn<ret>' -docstring 'go to next buffer'
+map global goto p '<esc>:bp<ret>' -docstring 'go to previous buffer'
 
 declare-user-mode jump-actions
 map -docstring 'enter jump mode (select mode: replace)' global jump-actions f ':enter_jump_mode_with_replace_select_mode<ret>'
