@@ -1,7 +1,10 @@
-@builder.io/micro-agent@0.0.17
+@builder.io/micro-agent@0.0.25
+@fedify/cli@1.2.0
 @tailwindcss/language-server@0.0.16
-git-split-diffs@1.1.0
+bash-language-server@5.4.2
+git-split-diffs@2.2.0
 http-server@14.1.1
 license@1.0.3
+netlify-cli@17.33.4
 typescript-language-server@4.3.3
 vscode-langservers-extracted@4.8.0
