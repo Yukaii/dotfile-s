@@ -19,7 +19,7 @@ window-height              = 30
 window-width               = 100
 
 # Shaders
-custom-shader = shaders/bloom.glsl
+# custom-shader = shaders/bloom.glsl
 
 # Keybindings
 
