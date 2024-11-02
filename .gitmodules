@@ -10,3 +10,6 @@
 [submodule "bin/.bin/moreutils"]
 	path = bin/.bin/moreutils
 	url = git://git.joeyh.name/moreutils
+[submodule "ghostty/.config/ghostty/shaders"]
+	path = ghostty/.config/ghostty/shaders
+	url = git@github.com:hackrmomo/ghostty-shaders.git

@@ -30,3 +30,5 @@ keybind = super+n=new_window
 keybind = super+v=paste_from_clipboard
 keybind = super+shift+k=clear_screen
 
+keybind = alt+q=toggle_quick_terminal
+
