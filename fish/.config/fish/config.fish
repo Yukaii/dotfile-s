@@ -172,7 +172,7 @@ alias glgg='git log --graph --max-count=10'
 #compdef _git glgg=git-log
 alias glgga='git log --graph --decorate --all'
 #compdef _git glgga=git-log
-alias gl="git-foresta --all --style=10 | less -RSX"
+alias gl="serie"
 alias gll='git log --oneline --pretty="format:%C(yellow)%h %Cblue%>(12)%ad %Cgreen%<(7)%aN%Cred%d %Creset%s" --date=relative --graph --branches --remotes --tags --decorate'
 alias gl2="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
 #compdef _git glo=git-log
