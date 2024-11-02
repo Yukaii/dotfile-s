@@ -377,6 +377,10 @@ atuin init fish | source
 kubectl completion fish | source
 mise activate fish | source
 
+if test -n "$GHOSTTY_RESOURCES_DIR"
+    source "$GHOSTTY_RESOURCES_DIR/shell-integration/fish/vendor_conf.d/ghostty-shell-integration.fish"
+end
+
 alias kbc="kubectl"
 
 alias ati="atuin search -i"

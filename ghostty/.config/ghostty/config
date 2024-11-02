@@ -1,0 +1,7 @@
+font-family = JetBrainsMono Nerd Font
+font-size = 15
+
+command = "/opt/homebrew/bin/fish"
+
+cursor-style = block
+cursor-style-blink = false
