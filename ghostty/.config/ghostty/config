@@ -18,6 +18,8 @@ window-padding-y           = 5
 window-height              = 30
 window-width               = 100
 
+# Shaders
+custom-shader = shaders/bloom.glsl
 
 # Keybindings
 
