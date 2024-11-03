@@ -18,6 +18,12 @@ window-padding-y           = 5
 window-height              = 30
 window-width               = 100
 
+window-title-font-family = JetBrainsMono Nerd Font
+
+background-opacity         = 0.8
+background-blur-radius     = 20
+unfocused-split-opacity    = 0.85
+
 # Shaders
 # custom-shader = shaders/bloom.glsl
 
@@ -34,3 +40,9 @@ keybind = super+shift+k=clear_screen
 
 keybind = alt+q=toggle_quick_terminal
 
+# tsm popup shrotcut toggle
+# \x02 is ctrl+b (default tmux prefix)
+# \x01 is ctrl+a (common alternative tmux prefix)
+# \x00 is ctrl+space
+# \x11 is ctrl+q
+keybind = ctrl+'=text:\x11'
