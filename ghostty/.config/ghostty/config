@@ -11,6 +11,7 @@ shell-integration-features = no-cursor
 
 macos-option-as-alt        = true
 macos-titlebar-style       = hidden
+macos-window-shadow        = false
 
 window-padding-x           = 10
 window-padding-y           = 5
@@ -20,15 +21,14 @@ window-width               = 100
 
 window-title-font-family   = JetBrainsMono Nerd Font
 
-background-opacity         = 0.85
-background-blur-radius     = 20
+background-opacity         = 0.9
+background-blur-radius     = 25
 unfocused-split-opacity    = 0.85
 
 # Shaders
 # custom-shader = shaders/bloom.glsl
 
 # Keybindings
-
 keybind = ctrl+shift+right=goto_split:right
 keybind = ctrl+shift+left=goto_split:left
 keybind = ctrl+shift+up=goto_split:top
@@ -40,9 +40,10 @@ keybind = super+shift+k=clear_screen
 
 keybind = global:alt+shift+q=toggle_quick_terminal
 
-# tsm popup shrotcut toggle
 # \x02 is ctrl+b (default tmux prefix)
 # \x01 is ctrl+a (common alternative tmux prefix)
 # \x00 is ctrl+space
 # \x11 is ctrl+q
+
+# tsm popup shrotcut toggle
 keybind = ctrl+'=text:\x11'
