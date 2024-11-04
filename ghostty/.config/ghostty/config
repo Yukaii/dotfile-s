@@ -18,7 +18,7 @@ window-padding-y           = 5
 window-height              = 30
 window-width               = 100
 
-window-title-font-family = JetBrainsMono Nerd Font
+window-title-font-family   = JetBrainsMono Nerd Font
 
 background-opacity         = 0.85
 background-blur-radius     = 20
