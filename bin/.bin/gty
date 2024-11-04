@@ -1,0 +1,14 @@
+#!/bin/bash
+# gty - CLI wrapper for ghostty with subcommands
+
+case "$1" in
+    config-docs)
+        ghostty +show-config --default --docs | bat -l toml --style="plain"
+        ;;
+    action-docs)
+        ghostty +list-actions --docs | bat -l yaml --style="plain"
+        ;;
+    *)
+        echo "Usage: gty [config-docs|action-docs]"
+        ;;
+esac
