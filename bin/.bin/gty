@@ -17,7 +17,6 @@ case "$1" in
         echo ""
         echo "  action-docs     List available actions for ghostty, with detailed"
         echo "                  documentation of each action's purpose and usage."
-        echo "                  This is formatted as YAML for easy readability."
         echo ""
         echo "Examples:"
         echo "  gty config-docs      # Display configuration documentation in TOML format"
