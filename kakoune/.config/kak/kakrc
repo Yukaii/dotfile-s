@@ -492,6 +492,23 @@ cork edit-on-dir https://gitlab.com/fsub/kakoune-edit-or-dir.git/ %{
   set-option global edit_or_dir_hidden '-A'
 }
 
+cork save-state https://gitlab.com/Screwtapello/kakoune-state-save.git %{
+  hook global KakBegin .* %{
+    state-save-reg-load colon
+    state-save-reg-load pipe
+    state-save-reg-load slash
+  }
+
+  hook global KakEnd .* %{
+      state-save-reg-save colon
+      state-save-reg-save pipe
+      state-save-reg-save slash
+  }
+
+  hook global FocusOut .* %{ state-save-reg-save dquote }
+  hook global FocusIn  .* %{ state-save-reg-load dquote }
+}
+
 # cork bookmark.kak https://github.com/Aelerinya/bookmarks.kak %{
 #   # hook global WinCreate .* bookmarks-enable
 # }
