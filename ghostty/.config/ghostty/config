@@ -25,6 +25,11 @@ background-opacity         = 0.9
 background-blur-radius     = 25
 unfocused-split-opacity    = 0.85
 
+# Quick terminal
+
+quick-terminal-animation-duration = 0
+quick-terminal-position           = bottom
+
 # Shaders
 # custom-shader = shaders/bloom.glsl
 
