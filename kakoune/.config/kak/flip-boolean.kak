@@ -22,7 +22,7 @@ hook global WinSetOption filetype=.* %{
     # Check if the filetype matches json, javascript, or typescript
     evaluate-commands %sh{
         case "$kak_opt_filetype" in
-            json|javascript|typescript)
+            json|javascript|typescript|toml)
                 echo "map global normal <ret> ':flip-boolean<ret>'"
                 ;;
         esac
