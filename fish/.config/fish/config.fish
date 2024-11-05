@@ -350,8 +350,8 @@ set -g fish_greeting
 alias ibrew='arch -x86_64 /usr/local/homebrew/bin/brew'
 alias mbrew='arch -arm64e /opt/homebrew/bin/brew'
 
-oh-my-posh --init --shell fish --config (mbrew --prefix oh-my-posh)"/themes/uew.omp.json" | source
-# oh-my-posh --init --shell fish --config (brew --prefix oh-my-posh)"/themes/takuya.omp.json" | source
+oh-my-posh init fish --config (mbrew --prefix oh-my-posh)"/themes/uew.omp.json" | source
+# oh-my-posh init fish --config (brew --prefix oh-my-posh)"/themes/takuya.omp.json" | source
 
 # pnpm setup
 set PNPM_HOME "$HOME/Library/pnpm"
