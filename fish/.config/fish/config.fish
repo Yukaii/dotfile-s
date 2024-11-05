@@ -361,7 +361,11 @@ volta completions fish | source
 
 sg completions fish | source
 fzf --fish | source
-wezterm shell-completion --shell fish | source
+
+if test -n "$WEZTERM_PANE"
+  wezterm shell-completion --shell fish | source
+end
+
 fnm env --use-on-cd | source
 zoxide init fish | source
 atuin init fish | source
