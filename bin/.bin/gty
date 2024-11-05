@@ -1,6 +1,18 @@
 #!/bin/bash
 # gty - CLI wrapper for ghostty with subcommands
 
+# Check if 'bat' and 'ghostty' are installed
+if ! command -v bat &> /dev/null; then
+    echo "Error: 'bat' is not installed. Please install 'bat' to use this script."
+    exit 1
+fi
+
+if ! command -v ghostty &> /dev/null; then
+    echo "Error: 'ghostty' is not installed. Please install 'ghostty' to use this script."
+    exit 1
+fi
+
+# Main command handling
 case "$1" in
     config-docs)
         ghostty +show-config --default --docs | bat -l toml --style="plain"
