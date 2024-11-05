@@ -281,13 +281,6 @@ function tre
   tree -C $argv | less -r
 end
 
-function input_volumn_max
-  while true
-    osascript -e "set volume input volume 100"
-    sleep 10
-  end
-end
-
 function kp --description "Kill processes"
   set -l __kp__pid ''
 
@@ -340,8 +333,6 @@ set -g theme_title_display_process yes
 # status --is-interactive; and source (pyenv init -|psub)
 status is-login; and pyenv init --path | source
 
-rvm default
-# nvm use
 set -x GPG_TTY (tty)
 
 # hide the fish welcome message
