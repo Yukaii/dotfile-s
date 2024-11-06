@@ -60,6 +60,8 @@ alias grbc='git rebase --continue' #compdef _git grbc=git-rebase
 alias grba='git rebase --abort' #compdef _git grba=git-rebase
 alias gb='git branch' #compdef _git gb=git-branch
 alias gba='git branch -a' #compdef _git gba=git-branch
+alias gbc-dry='git branch --merged | egrep -v "(^\*|master|dev)"' #compdef _git gbrc-dry='git-branch-cleanup-dryrun'
+alias gbc='gbc-dry | xargs git branch -d' #compdef _git gbrc='git-branch-cleanup'
 alias gbr='git branch -r' #compdef _git gbr=git-branch-remote
 alias gcp='git cherry-pick' #compdef _git gcp=git-cherry-pick
 alias glg='git log --stat --max-count=10' #compdef _git glg=git-log
@@ -76,7 +78,7 @@ alias git-svn-dcommit-push='git svn dcommit; and git push github master:svntrunk
 alias ggpull='git pull origin (current_branch)' #compdef ggpull=git
 alias ggpur='git pull --rebase origin (current_branch)' #compdef ggpur=git
 alias ggpush='git push origin (current_branch)' #compdef ggpush=git
-alias ggpnp='git pull origin (current_branch); and git push origin (current_branch)' #compdef ggpnp=git
+alias ggpnp='git pull origin (current_branch); and git push origin (current_branch)' #compdef ggpnp=gitlias ggpnp='git pull origin (current_branch); and git push origin (current_branch)' #compdef ggpnp=git
 
 # Functions for various purposes
 function set_current_docker_host
