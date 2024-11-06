@@ -204,6 +204,6 @@ enter_accept = true
 # In a later release it will become the default across the board
 records = true
 
-# [dotfiles]
-# enabled = true
+[dotfiles]
+enabled = true
 
