@@ -6,16 +6,13 @@ set -x LC_CTYPE en_US.UTF-8
 set -x LC_ALL en_US.UTF-8
 
 # Path Configurations
-set PATH $PATH "$HOME/.bin" "$HOME/.deno/bin" "$HOME/.spicetify"
+fish_add_path "$HOME/.bin"
+fish_add_path "$HOME/.deno/bin"
+fish_add_path "$HOME/.spicetify"
 fish_add_path "$HOME/.local/bin/hx-utils-bin"
-set PATH $PATH "$HOME/.cargo/bin" "$HOME/go/bin" "$HOME/.poetry/bin"
-set PATH $PATH "$HOME/Library/Android/sdk/platform-tools" "$HOME/Library/Android/sdk/tools"
-
-# Solana, bun, Python, Mason paths
-set PATH $PATH "$HOME/.local/share/solana/install/active_release/bin"
-set PATH $PATH "$HOME/.bun/bin"
-set PATH $PATH "$HOME/Library/Python/3.8/bin"
-set PATH $PATH "$HOME/.local/share/nvim/mason/bin"
+fish_add_path "$HOME/.cargo/bin"
+fish_add_path "$HOME/go/bin"
+fish_add_path "$HOME/.bun/bin"
 
 # Homebrew paths for different architectures
 set arc (arch)
@@ -31,10 +28,6 @@ end
 # GNU paths
 fish_add_path /opt/homebrew/opt/gnu-getopt/bin
 fish_add_path /opt/homebrew/opt/make/libexec/gnubin
-
-# MySQL and other tools
-set PATH $PATH "/usr/local/mysql/bin"
-fish_add_path /Users/yukai/.spicetify
 
 # Environment Variables
 set -x PIPENV_SHELL_FANCY 1
@@ -114,17 +107,6 @@ alias git-svn-dcommit-push='git svn dcommit; and git push github master:svntrunk
 alias gsr='git svn rebase'
 alias gsd='git svn dcommit'
 
-# Current branch and repository functions
-function current_branch
-  set ref (git symbolic-ref HEAD 2> /dev/null); or set ref (git rev-parse --short HEAD 2> /dev/null); or return
-  echo ref | sed s-refs/heads--
-end
-
-function current_repository
-  set ref (git symbolic-ref HEAD 2> /dev/null); or set ref (git rev-parse --short HEAD 2> /dev/null); or return
-  echo (git remote -v | cut -d':' -f 2)
-end
-
 alias ggpull='git pull origin (current_branch)' #compdef ggpull=git
 alias ggpur='git pull --rebase origin (current_branch)' #compdef ggpur=git
 alias ggpush='git push origin (current_branch)' #compdef ggpush=git
@@ -146,54 +128,6 @@ alias pm2rs="pm2_app_selector restart"
 alias pm2st="pm2_app_selector stop"
 alias ibrew='arch -x86_64 /usr/local/homebrew/bin/brew'
 alias mbrew='arch -arm64e /opt/homebrew/bin/brew'
-
-# Functions for convenience
-function passgrep
-  pass find $argv | env GREP_COLOR='1;34' egrep --color -i "$argv|\$"
-end
-
-function gdv
-  git diff -w $argv | view -
-end
-
-function tre
-  tree -C $argv | less -r
-end
-
-function kp --description "Kill processes"
-  set -l __kp__pid ''
-  if contains -- '--tcp' $argv
-    set __kp__pid (lsof -Pwni tcp | sed 1d | eval "fzf $FZF_DEFAULT_OPTS -m --header='[kill:tcp]'" | awk '{print $2}')
-  else
-    set __kp__pid (ps -ef | sed 1d | eval "fzf $FZF_DEFAULT_OPTS -m --header='[kill:process]'" | awk '{print $2}')
-  end
-  if test "x$__kp__pid" != "x"
-    if test "x$argv[1]" != "x"
-      echo $__kp__pid | xargs kill $argv[1]
-    else
-      echo $__kp__pid | xargs kill -9
-    end
-    kp
-  end
-end
-
-function bip --description "Install brew plugins"
-  set -l inst (brew search | eval "fzf $FZF_DEFAULT_OPTS -m --header='[brew:install]'")
-  if not test (count $inst) = 0
-    for prog in $inst
-      brew install "$prog"
-    end
-  end
-end
-
-function bcp --description "Remove brew plugins"
-  set -l inst (brew leaves | eval "fzf $FZF_DEFAULT_OPTS -m --header='[brew:uninstall]'")
-  if not test (count $inst) = 0
-    for prog in $inst
-      brew uninstall "$prog"
-    end
-  end
-end
 
 function set_current_docker_host
   set -x DOCKER_HOST (docker context inspect --format '{{.Endpoints.docker.Host}}')
