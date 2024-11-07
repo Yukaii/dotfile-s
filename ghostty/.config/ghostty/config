@@ -57,6 +57,17 @@ keybind = ctrl+'=text:\x11'
 keybind = ctrl+alt+left=text:\x11p
 keybind = ctrl+alt+right=text:\x11n
 
+# other tmux goods
+
+# copy mode
+keybind = ctrl+alt+[=text:\x11[
+# clear history
+keybind = ctrl+alt+k=text:\x11\x1bl
+# split
+keybind = ctrl+alt+'=text:\x11"
+# vertical split
+keybind = ctrl+alt+/=text:\x11|
+
 # tmux panel jump
 keybind = ctrl+alt+physical:zero=text:\x110
 keybind = ctrl+alt+physical:one=text:\x111
