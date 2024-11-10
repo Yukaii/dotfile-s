@@ -54,6 +54,8 @@ keybind = global:alt+shift+q=toggle_quick_terminal
 
 # tsm popup shrotcut toggle
 keybind = ctrl+'=text:\x11'
+
+# tmux window navigation
 keybind = ctrl+alt+left=text:\x11p
 keybind = ctrl+alt+right=text:\x11n
 
