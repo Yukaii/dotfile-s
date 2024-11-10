@@ -368,14 +368,16 @@ hook global BufCreate .*\.tmux.conf %{
 set-face global InsertCursor default,green+B
 
 hook global ModeChange .*:.*:insert %{
-    set-face window PrimaryCursor InsertCursor
-    set-face window PrimaryCursorEol InsertCursor
+  set-face window PrimaryCursor InsertCursor
+  set-face window PrimaryCursorEol InsertCursor
 }
 
-hook global ModeChange .*:insert:.* %{ try %{
+hook global ModeChange .*:insert:.* %{
+  try %{
     unset-face window PrimaryCursor
     unset-face window PrimaryCursorEol
-} }
+  }
+}
 
 
 # Plugins
@@ -501,9 +503,9 @@ cork save-state https://gitlab.com/Screwtapello/kakoune-state-save.git %{
   }
 
   hook global KakEnd .* %{
-      state-save-reg-save colon
-      state-save-reg-save pipe
-      state-save-reg-save slash
+    state-save-reg-save colon
+    state-save-reg-save pipe
+    state-save-reg-save slash
   }
 
   hook global FocusOut .* %{ state-save-reg-save dquote }
