@@ -1,5 +1,7 @@
 # Configuration and Secrets
 source $__fish_config_dir/secrets.fish
+source $__fish_config_dir/aliases.fish
+
 set LANG "en_US.UTF-8"
 set -x GPG_TTY (tty)
 set -x LC_CTYPE en_US.UTF-8
@@ -64,6 +66,7 @@ alias gbc-dry='git branch --merged | egrep -v "(^\*|master|dev)"' #compdef _git 
 alias gbc='gbc-dry | xargs git branch -d' #compdef _git gbrc='git-branch-cleanup'
 alias gbr='git branch -r' #compdef _git gbr=git-branch-remote
 alias gcp='git cherry-pick' #compdef _git gcp=git-cherry-pick
+alias gl='git log --oneline --graph'
 alias glg='git log --stat --max-count=10' #compdef _git glg=git-log
 alias glgg='git log --graph --max-count=10' #compdef _git glgg=git-log
 alias glgga='git log --graph --decorate --all' #compdef _git glgga=git-log
