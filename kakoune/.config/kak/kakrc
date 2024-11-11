@@ -512,6 +512,15 @@ cork save-state https://gitlab.com/Screwtapello/kakoune-state-save.git %{
   hook global FocusIn  .* %{ state-save-reg-load dquote }
 }
 
+cork crosshair https://github.com/insipx/kak-crosshairs %{
+  set-option global highlight_current_line true
+  set-face   global crosshairs_line   default,rgb:383838
+  set-face   global crosshairs_column default,rgb:383838
+
+  crosshairs-change-hooks
+  crosshairs-update
+}
+
 # cork bookmark.kak https://github.com/Aelerinya/bookmarks.kak %{
 #   # hook global WinCreate .* bookmarks-enable
 # }
