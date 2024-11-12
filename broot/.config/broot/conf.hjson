@@ -192,3 +192,7 @@ imports: [
     #     file: white-skin.hjson
     # }
 ]
+
+skin: {
+  default: "gray(23) none / gray(20) none"
+}
