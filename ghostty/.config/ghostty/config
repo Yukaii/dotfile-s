@@ -69,6 +69,8 @@ keybind = ctrl+alt+k=text:\x11\x1bl
 keybind = ctrl+alt+'=text:\x11"
 # vertical split
 keybind = ctrl+alt+/=text:\x11|
+# toggle zoom
+keybind = ctrl+alt+z=text:\x11z
 
 # tmux panel jump
 keybind = ctrl+alt+physical:zero=text:\x110
