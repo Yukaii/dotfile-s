@@ -34,6 +34,7 @@ fish_add_path /opt/homebrew/opt/make/libexec/gnubin
 # Environment Variables
 set -x PIPENV_SHELL_FANCY 1
 set -x PIPENV_IGNORE_VIRTUALENVS 1
+set -x EDITOR 'k'
 
 alias ibrew='arch -x86_64 /usr/local/homebrew/bin/brew'
 alias mbrew='arch -arm64e /opt/homebrew/bin/brew'
