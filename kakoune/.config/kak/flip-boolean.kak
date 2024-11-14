@@ -14,19 +14,20 @@ define-command -hidden flip-boolean %{
     }
 }
 
-# Hook to manage key mappings based on filetype
-hook global WinSetOption filetype=.* %{
-    # Always unmap <Return> globally to avoid conflicts
-    unmap global normal <ret>
-
-    # Check if the filetype matches json, javascript, or typescript
+define-command -hidden setup-return-mapping %{
+    # Check if the filetype matches json, javascript, typescript, or toml
     evaluate-commands %sh{
         case "$kak_opt_filetype" in
             json|javascript|typescript|toml)
-                echo "map global normal <ret> ':flip-boolean<ret>'"
+                echo "unmap buffer normal <ret>"
+                echo "map buffer normal <ret> ':flip-boolean<ret>'"
                 ;;
         esac
     }
 }
 
+
+hook global WinSetOption filetype=.* %{
+  setup-return-mapping
+}
 
