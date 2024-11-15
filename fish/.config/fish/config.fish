@@ -106,7 +106,7 @@ kubectl completion fish | source
 fnm env --use-on-cd | source
 zoxide init fish | source
 atuin init fish | source
-mise activate fish | source
+# mise activate fish | source
 if test -n "$WEZTERM_PANE"
   wezterm shell-completion --shell fish | source
 end
