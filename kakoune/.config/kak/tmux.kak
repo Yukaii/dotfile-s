@@ -34,28 +34,28 @@ define-command focus-down -hidden -docstring "focus down pane" %{
 }
 
 define-command -override -hidden -params 2.. tmux-terminal-impl %{
-    evaluate-commands %sh{
-        tmux=${kak_client_env_TMUX:-$TMUX}
-        if [ -z "$tmux" ]; then
-            echo "fail 'This command is only available in a tmux session'"
-            exit
-        fi
-        tmux_args="$1"
-        if [ "${1%%-*}" = split ]; then
-            tmux_args="$tmux_args -t ${kak_client_env_TMUX_PANE}"
-        elif [ "${1%% *}" = new-window ]; then
-            session_id=$(tmux display-message -p -t ${kak_client_env_TMUX_PANE} '#{session_id}')
-            tmux_args="$tmux_args -t $session_id"
-        fi
-        shift
-        # ideally we should escape single ';' to stop tmux from interpreting it as a new command
-        # but that's probably too rare to care
-        if [ -n "$TMPDIR" ]; then
-            TMUX=$tmux tmux $tmux_args env TMPDIR="$TMPDIR" "$@" < /dev/null > /dev/null 2>&1 &
-        else
-            TMUX=$tmux tmux $tmux_args "$@" < /dev/null > /dev/null 2>&1 &
-        fi
-    }
+  evaluate-commands %sh{
+    tmux=${kak_client_env_TMUX:-$TMUX}
+    if [ -z "$tmux" ]; then
+      echo "fail 'This command is only available in a tmux session'"
+      exit
+    fi
+    tmux_args="$1"
+    if [ "${1%%-*}" = split ]; then
+      tmux_args="$tmux_args -t ${kak_client_env_TMUX_PANE}"
+    elif [ "${1%% *}" = new-window ]; then
+      session_id=$(tmux display-message -p -t ${kak_client_env_TMUX_PANE} '#{session_id}')
+      tmux_args="$tmux_args -t $session_id"
+    fi
+    shift
+    # ideally we should escape single ';' to stop tmux from interpreting it as a new command
+    # but that's probably too rare to care
+    if [ -n "$TMPDIR" ]; then
+      TMUX=$tmux tmux $tmux_args env TMPDIR="$TMPDIR" "$@" < /dev/null > /dev/null 2>&1 &
+    else
+      TMUX=$tmux tmux $tmux_args "$@" < /dev/null > /dev/null 2>&1 &
+    fi
+  }
 }
 
 
@@ -83,40 +83,40 @@ define-command tmux-open-broot -docstring 'open broot' %{
     absolute=$(realpath "$PWD/$dir")
 
     if [ -z "$broot_pane_id" ]; then
-        # If no broot process is found, split the pane and run broot
-        tmux split-window -hb -l 23% "$env_line broot --listen $kak_session $dir"
+      # If no broot process is found, split the pane and run broot
+      tmux split-window -hb -l 23% "$env_line broot --listen $kak_session $dir"
 
-        # Wait until broot returns a valid response for the session or timeout after 2 seconds
-        max_wait=20  # 2 seconds total (20 * 0.1s)
-        wait_count=0
+      # Wait until broot returns a valid response for the session or timeout after 2 seconds
+      max_wait=20  # 2 seconds total (20 * 0.1s)
+      wait_count=0
 
-        while true; do
-            root=$(broot --send "$kak_session" --get-root)
-            if [ -n "$root" ]; then
-                break
-            fi
-            sleep 0.1
-            wait_count=$((wait_count + 1))
-
-            # Check if max_wait time has been exceeded
-            if [ "$wait_count" -ge "$max_wait" ]; then
-                echo "Timeout waiting for broot to initialize."
-                break
-            fi
-        done
-
-        broot --send "$kak_session" -c ":select $base"
-    else
-        # If a broot process is already running in a different pane, prepare to send commands to it
+      while true; do
         root=$(broot --send "$kak_session" --get-root)
-        if [ "$root" != "$absolute" ] && [ "$dir" != '.' ]; then
-          relative_path=$(grealpath --relative-to="$root" "$absolute")
-          broot --send "$kak_session" -c ":focus $relative_path"
+        if [ -n "$root" ]; then
+          break
         fi
+        sleep 0.1
+        wait_count=$((wait_count + 1))
 
-        broot --send "$kak_session" -c ":select $base"
-        # Activate the pane with the broot process
-        tmux select-pane -t "$broot_pane_id"
+        # Check if max_wait time has been exceeded
+        if [ "$wait_count" -ge "$max_wait" ]; then
+          echo "Timeout waiting for broot to initialize."
+          break
+        fi
+      done
+
+      broot --send "$kak_session" -c ":select $base"
+    else
+      # If a broot process is already running in a different pane, prepare to send commands to it
+      root=$(broot --send "$kak_session" --get-root)
+      if [ "$root" != "$absolute" ] && [ "$dir" != '.' ]; then
+        relative_path=$(grealpath --relative-to="$root" "$absolute")
+        broot --send "$kak_session" -c ":focus $relative_path"
+      fi
+
+      broot --send "$kak_session" -c ":select $base"
+      # Activate the pane with the broot process
+      tmux select-pane -t "$broot_pane_id"
     fi
   }
 }
