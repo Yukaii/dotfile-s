@@ -1,0 +1,160 @@
+#!/usr/bin/env bash
+
+# Default values
+indent_type="space"
+indent_size=4
+file=""
+pipe_mode=false
+
+# Function to print usage
+usage() {
+  echo "Usage: $0 [-f file] [-i indent_type] [-s indent_size]"
+  echo "  -f : File path to format (optional if using pipe)"
+  echo "  -i : Indentation type (space|tab) (default: space)"
+  echo "  -s : Indentation size (default: 4)"
+  echo ""
+  echo "Examples:"
+  echo "  $0 -f myfile.txt -i space -s 2"
+  echo "  cat myfile.txt | $0 -i tab -s 4"
+  exit 1
+}
+
+# Parse command line options
+while getopts "f:i:s:h" opt; do
+  case $opt in
+    f) file="$OPTARG" ;;
+    i) indent_type="$OPTARG" ;;
+    s) indent_size="$OPTARG" ;;
+    h) usage ;;
+    ?) usage ;;
+  esac
+done
+
+# Validate indent_type
+if [[ "$indent_type" != "space" && "$indent_type" != "tab" ]]; then
+  echo "Error: indent_type must be 'space' or 'tab'" >&2
+  exit 1
+fi
+
+# Validate indent_size
+if ! [[ "$indent_size" =~ ^[0-9]+$ ]]; then
+  echo "Error: indent_size must be a positive number" >&2
+  exit 1
+fi
+
+# Check if we're in pipe mode (stdin is not a terminal)
+if [ ! -t 0 ]; then
+  pipe_mode=true
+fi
+
+# Function to detect indentation (optimized)
+detect_indentation() {
+  local min_space=0
+  local uses_tabs=false
+  local first_indented_line
+
+  # Read first 50 non-empty lines to detect pattern
+  local count=0
+  while IFS= read -r line && [ $count -lt 50 ]; do
+    [[ -z "$line" ]] && continue
+
+    if [[ "$line" =~ ^[[:space:]] ]]; then
+      if [[ "$line" =~ ^[[:space:]]*[^[:space:]] ]]; then
+        first_indented_line="$line"
+        local space_count=0
+        local tab_count=0
+
+        # Fast space/tab counting
+        if [[ "$line" =~ ^([[:space:]]*).*$ ]]; then
+          local indent="${BASH_REMATCH[1]}"
+          space_count=$(echo -n "$indent" | tr -cd ' ' | wc -c)
+          tab_count=$(echo -n "$indent" | tr -cd '\t' | wc -c)
+        fi
+
+        if [ "$tab_count" -gt 0 ]; then
+          uses_tabs=true
+          break
+        elif [ "$space_count" -gt 0 ]; then
+          if [ "$min_space" -eq 0 ] || [ "$space_count" -lt "$min_space" ]; then
+            min_space=$space_count
+          fi
+        fi
+        ((count++))
+      fi
+    fi
+  done
+
+  # Default fallbacks
+  if [ "$uses_tabs" = true ]; then
+    echo "tab 1"
+  elif [ "$min_space" -gt 0 ]; then
+    echo "space $min_space"
+  else
+    echo "space 4"
+  fi
+}
+
+# Function to process the text (optimized)
+process_text() {
+  local line="$1"
+  local current_type="$2"
+  local current_size="$3"
+
+  # Fast non-indented line check
+  [[ ! "$line" =~ ^[[:space:]] ]] && echo "$line" && return
+
+  # Extract leading whitespace efficiently
+  if [[ "$line" =~ ^([[:space:]]*)(.*)$ ]]; then
+    local leading_space="${BASH_REMATCH[1]}"
+    local content="${BASH_REMATCH[2]}"
+
+    # Calculate indentation level
+    local indent_level=0
+    if [ "$current_type" = "space" ]; then
+      indent_level=$(( $(echo -n "$leading_space" | tr -cd ' ' | wc -c) / current_size ))
+    else
+      indent_level=$(echo -n "$leading_space" | tr -cd '\t' | wc -c)
+    fi
+
+    # Apply new indentation efficiently
+    if [ "$indent_type" = "space" ]; then
+      local new_spaces=$((indent_level * indent_size))
+      printf "%${new_spaces}s%s\n" "" "$content"
+    else
+      printf "%${indent_level}s%s\n" "" "$content" | tr ' ' '\t'
+    fi
+  fi
+}
+
+# Main logic (optimized)
+process_file() {
+  local input
+  if [ "$pipe_mode" = true ]; then
+    input=$(cat)
+  else
+    input=$(cat "$file")
+  fi
+
+  # Detect indentation once
+  read -r detected_type detected_size <<< "$(detect_indentation <<< "$input")"
+
+  # Process all lines in one go
+  while IFS= read -r line; do
+    process_text "$line" "$detected_type" "$detected_size"
+  done <<< "$input"
+}
+
+if [ "$pipe_mode" = true ]; then
+  process_file
+elif [ -n "$file" ]; then
+  if [ ! -f "$file" ]; then
+    echo "Error: File '$file' not found" >&2
+    exit 1
+  fi
+  temp_file=$(mktemp)
+  process_file > "$temp_file"
+  mv "$temp_file" "$file"
+else
+  echo "Error: Either provide a file with -f or pipe content to the script" >&2
+  usage
+fi
