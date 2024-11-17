@@ -19,5 +19,6 @@ kks get '%val{buflist}' |
 		--bind="ctrl-t:execute-silent(kks send edit -scratch {q})+reload(kks get '%val{buflist}')" \
 		--history="$history_file" |
 	while read -r name; do
-		kks send buffer "$name"
+    escaped_name=$(printf "'%s'" "$(echo "$name" | sed 's/ /\\ /g')")
+    kks send buffer "$escaped_name"
 	done
