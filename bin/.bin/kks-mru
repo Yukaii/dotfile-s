@@ -8,11 +8,19 @@
 #
 # for this to work, add the following in kakrc:
 # (requires sponge from moreutils: https://joeyh.name/code/moreutils/)
-# hook global BufCreate [^*].* %{
-#     nop %sh{
-#         mru=~/.cache/kak-mru
-#         echo "$kak_buffile" | awk '!seen[$0]++' - "$mru" | sponge "$mru"
-#     }
+# hook global WinDisplay [^*].* %{
+#   evaluate-commands nop %sh{
+#     pwd="${kak_client_env_PWD}"
+#     mru=~/.cache/kak-mru-$(echo $pwd | sed 's|/|-|g')
+#
+#     # If pwd is empty, return early
+#     [ -z "$pwd" ] && exit
+#
+#     # Check if the mru file does not exist and create it
+#     [ ! -f "$mru" ] && touch "$mru"
+#
+#     echo "$kak_buffile" | awk '!seen[$0]++' - "$mru" | sponge "$mru"
+#   }
 # }
 
 preview_cmd="bat --color=always --line-range=:500"
@@ -21,21 +29,21 @@ mru=~/.cache/kak-mru-"$pwd"
 
 [ ! -f "$mru" ] && touch "$mru"
 
-# Clean up: Remove non-existing files from MRU
-temp_mru=$(mktemp)
-while read -r path; do
-    [ -e "$path" ] && echo "$path" >> "$temp_mru"
-done < "$mru"
-mv "$temp_mru" "$mru"
+# Clean up non-existing files and get relative paths in one go
+get_mru_list() {
+    while read -r path; do
+        if [ -e "$path" ]; then
+            echo "$path" | sed "s|^$PWD/||"
+        fi
+    done < "$mru"
+}
 
-# Create a temp file with relative paths
-relative_mru=$(mktemp)
-awk -v pwd="$PWD" '{ sub("^" pwd "/", "", $0); print }' "$mru" > "$relative_mru"
+selected=$(get_mru_list | fzf --height 100% --prompt 'mru> ' \
+    --preview "$preview_cmd {}" \
+    --header="[c-x] remove from MRU" \
+    --bind="ctrl-x:execute-silent(grep -v '^$PWD/{}$' '$mru' > '$mru.tmp' && mv '$mru.tmp' '$mru')+reload(sed \"s|^$PWD/||\" '$mru')" \
+    )
 
-selected=$(fzf --height 100% --prompt 'mru> ' --preview "$preview_cmd {}" < "$relative_mru")
 if [ -n "$selected" ]; then
     kks edit "$PWD/$selected"
 fi
-
-# Cleanup temporary file
-rm "$relative_mru"
