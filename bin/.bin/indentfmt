@@ -2,7 +2,7 @@
 
 # Default values
 indent_type="space"
-indent_size=4
+indent_size=2
 file=""
 pipe_mode=false
 
@@ -11,7 +11,7 @@ usage() {
   echo "Usage: $0 [-f file] [-i indent_type] [-s indent_size]"
   echo "  -f : File path to format (optional if using pipe)"
   echo "  -i : Indentation type (space|tab) (default: space)"
-  echo "  -s : Indentation size (default: 4)"
+  echo "  -s : Indentation size (default: 2)"
   echo ""
   echo "Examples:"
   echo "  $0 -f myfile.txt -i space -s 2"
