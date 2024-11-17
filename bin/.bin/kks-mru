@@ -41,7 +41,7 @@ get_mru_list() {
 selected=$(get_mru_list | fzf --height 100% --prompt 'mru> ' \
     --preview "$preview_cmd {}" \
     --header="[c-x] remove from MRU" \
-    --bind="ctrl-x:execute-silent(grep -v '^$PWD/{}$' '$mru' > '$mru.tmp' && mv '$mru.tmp' '$mru')+reload(sed \"s|^$PWD/||\" '$mru')" \
+    --bind="ctrl-x:execute(echo '$PWD/{}' | grep -vFf - '$mru' > '$mru.tmp' && mv '$mru.tmp' '$mru')+reload(sed \"s|^$PWD/||\" '$mru')" \
     )
 
 if [ -n "$selected" ]; then
