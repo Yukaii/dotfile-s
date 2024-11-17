@@ -11,12 +11,16 @@ history_file="$HOME/.cache/kks-git-changes-history"
 
 [ -f "$history_file" ] || touch "$history_file"
 
-git status --porcelain |
-    awk '{if ($1 == "??") print $2; else print $2}' |
+{
+    # Get tracked changes
+    git status --porcelain | grep -v "^??" | sed 's/^...//'
+
+    # Get and expand untracked files/directories
+    git ls-files --others --exclude-standard
+} | \
     fzf --multi --height 100% --prompt 'git changes> ' \
         --preview "$preview_cmd {}" --history="$history_file" \
         --bind "ctrl-d:preview-page-down,ctrl-u:preview-page-up" |
     while read -r file; do
         kks edit "${file}"
     done
-
