@@ -307,6 +307,33 @@ define-command grup-write -docstring "
   }
 }
 
+define-command format-indent -params 2 -docstring '
+  indentfmt <indent-type> <size>: Format current buffer indentation
+  indent-type: space or tab
+  size: indentation size (number)
+' -shell-script-candidates %{
+  printf "space\ntab\n"
+} %{
+  evaluate-commands %sh{
+    indent_type="$1"
+    indent_size="$2"
+
+    # Validate indent type
+    if [ "$indent_type" != "space" ] && [ "$indent_type" != "tab" ]; then
+      printf 'echo -markup {Error}Invalid indent type: must be space or tab\n'
+      exit 1
+    fi
+
+    # Validate indent size is a number
+    if ! [[ "$indent_size" =~ ^[0-9]+$ ]]; then
+      printf 'echo -markup {Error}Invalid size: must be a positive number\n'
+      exit 1
+    fi
+
+    printf '%s\n' "execute-keys '%%|indentfmt -i ${indent_type} -s ${indent_size}<ret>'"
+  }
+}
+
 
 # Hooks
 hook global RegisterModified '"' %{ nop %sh{
