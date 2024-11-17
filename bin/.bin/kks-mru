@@ -33,7 +33,10 @@ mru=~/.cache/kak-mru-"$pwd"
 get_mru_list() {
     while read -r path; do
         if [ -e "$path" ]; then
-            echo "$path" | sed "s|^$PWD/||"
+            case "$path" in
+                "$PWD/"*) echo "$path" | sed "s|^$PWD/||" ;;
+                *) echo "$path" ;;
+            esac
         fi
     done < "$mru"
 }
@@ -41,9 +44,12 @@ get_mru_list() {
 selected=$(get_mru_list | fzf --height 100% --prompt 'mru> ' \
     --preview "$preview_cmd {}" \
     --header="[c-x] remove from MRU" \
-    --bind="ctrl-x:execute(echo '$PWD/{}' | grep -vFf - '$mru' > '$mru.tmp' && mv '$mru.tmp' '$mru')+reload(sed \"s|^$PWD/||\" '$mru')" \
+    --bind="ctrl-x:execute(case {} in /*) echo {} ;; *) echo '$PWD/{}' ;; esac | grep -vFf - '$mru' > '$mru.tmp' && mv '$mru.tmp' '$mru')+reload(awk '{if(index(\$0,\"$PWD/\")==1){sub(\"^$PWD/\",\"\");print}else{print}}' '$mru')" \
     )
 
 if [ -n "$selected" ]; then
-    kks edit "$PWD/$selected"
+    case "$selected" in
+        /*) kks edit "$selected" ;;  # Absolute path
+        *) kks edit "$PWD/$selected" ;;  # Relative path
+    esac
 fi
