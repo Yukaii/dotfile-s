@@ -121,7 +121,10 @@ process_text() {
       local new_spaces=$((indent_level * indent_size))
       printf "%${new_spaces}s%s\n" "" "$content"
     else
-      printf "%${indent_level}s%s\n" "" "$content" | tr ' ' '\t'
+      # Only convert leading spaces to tabs
+      local new_indent
+      new_indent=$(printf "%${indent_level}s" "" | tr ' ' '\t')
+      printf "%s%s\n" "$new_indent" "$content"
     fi
   fi
 }
