@@ -1,0 +1,172 @@
+#!/usr/bin/env bash
+
+# Usage: wrap-calculator [options]
+#   --width=N       Effective width (after subtracting gutters, etc)
+#   --pos=N         Current cursor position (in characters)
+#   --move=(up|down) Movement direction
+#   --count=N       Number of lines to move
+#   --word          Enable word wrapping
+#   --indent        Preserve indentation
+#   --marker=STR    Wrap marker
+
+# Parse arguments
+width=80
+pos=0
+move="down"
+count=1
+word_wrap=false
+preserve_indent=false
+marker=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --width=*)
+      width="${1#*=}"
+      ;;
+    --pos=*)
+      pos="${1#*=}"
+      ;;
+    --move=*)
+      move="${1#*=}"
+      ;;
+    --count=*)
+      count="${1#*=}"
+      ;;
+    --word)
+      word_wrap=true
+      ;;
+    --indent)
+      preserve_indent=true
+      ;;
+    --marker=*)
+      marker="${1#*=}"
+      ;;
+    *)
+      break
+      ;;
+  esac
+  shift
+done
+
+# Read line content from stdin
+read -r line
+
+# Calculate indentation if needed
+if [ "$preserve_indent" = true ]; then
+  indent=$(echo "$line" | sed -E 's/^([[:space:]]*).*$/\1/' | wc -m)
+  indent=$((indent - 1)) # Adjust for wc counting newline
+else
+  indent=0
+fi
+
+marker_width=${#marker}
+prefix_len=$((marker_width > indent ? marker_width : indent))
+
+# Function to get next word boundary
+get_word_boundary() {
+  local text="$1"
+  local start="$2"
+  local max_width="$3"
+
+  # If not word wrap, return max_width
+  if [ "$word_wrap" = false ]; then
+    echo "$max_width"
+    return
+  fi
+
+  # Look for last space before max_width
+  local substr="${text:$start:$max_width}"
+  local last_space=$(echo "$substr" | grep -bo '[[:space:]]' | tail -n1 | cut -d: -f1)
+
+  if [ -n "$last_space" ]; then
+    echo "$((start + last_space))"
+  else
+    echo "$((start + max_width))"
+  fi
+}
+
+# Find wrap positions
+find_wrap_positions() {
+  local text="$1"
+  local positions=""
+  local current_pos=0
+  local text_length=${#text}
+
+  while [ $current_pos -lt $text_length ]; do
+    local available_width=$width
+    if [ $current_pos -gt 0 ]; then
+      available_width=$((width - prefix_len))
+    fi
+
+    local next_pos=$(get_word_boundary "$text" "$current_pos" "$available_width")
+    if [ $next_pos -eq $current_pos ]; then
+      break
+    fi
+
+    positions="$positions $next_pos"
+    current_pos=$next_pos
+    while [ $current_pos -lt $text_length ] && [ "${text:$current_pos:1}" = " " ]; do
+      current_pos=$((current_pos + 1))
+    done
+  done
+
+  echo "$positions"
+}
+
+# Calculate new position based on movement
+calculate_new_position() {
+  local positions="$1"
+  local direction="$2"
+  local count="$3"
+  local current_pos="$4"
+
+  # Convert positions string to array
+  local -a pos_array
+  read -ra pos_array <<< "$positions"
+
+  # Find current wrapped line
+  local current_line=0
+  local prev_pos=0
+  for wrap_pos in "${pos_array[@]}"; do
+    if [ "$current_pos" -lt "$wrap_pos" ]; then
+      break
+    fi
+    prev_pos=$wrap_pos
+    current_line=$((current_line + 1))
+  done
+
+  # Calculate target line
+  local target_line
+  if [ "$direction" = "down" ]; then
+    target_line=$((current_line + count))
+  else
+    target_line=$((current_line - count))
+  fi
+
+  # Ensure target line is within bounds
+  if [ $target_line -lt 0 ]; then
+    echo 0
+    return
+  fi
+
+  if [ $target_line -ge ${#pos_array[@]} ]; then
+    echo "${#line}"
+    return
+  fi
+
+  # Calculate column position in target line
+  local rel_pos=$((current_pos - prev_pos))
+  if [ $target_line -eq 0 ]; then
+    echo "$rel_pos"
+  else
+    local target_start=${pos_array[$((target_line - 1))]}
+    echo $((target_start + rel_pos))
+  fi
+}
+
+# Main execution
+wrap_positions=$(find_wrap_positions "$line")
+new_pos=$(calculate_new_position "$wrap_positions" "$move" "$count" "$pos")
+
+# Output result
+echo "$new_pos"
