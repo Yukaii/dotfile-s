@@ -278,6 +278,8 @@ define-command -hidden wrap-calc -params 4 %{
     printf "execute-keys ':select %s.%d,%s.%d<ret>';" "$line_number" "$new_pos" "$line_number" "$new_pos"
 
     # Debug info
+    # printf 'info -title wrap-calc %%{width: %d, pos: %d, new_pos: %d, line_number: %d, sel: %s}' \
+      # "$1" "$2" "$new_pos" "$line_number" "$3"
     # printf 'info -title wrap-calc %%{width: %d, pos: %d, new_pos: %d, line_number: %d, sel: %s\nline: %%{%s}}' \
     #   "$1" "$2" "$new_pos" "$line_number" "$3" "$line_content"
   }
