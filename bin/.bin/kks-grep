@@ -7,13 +7,32 @@
 # - fzf (https://github.com/junegunn/fzf)
 # - bat (change to your liking) (https://github.com/sharkdp/bat)
 
+# Parse arguments
+hidden=false
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --hidden)
+            hidden=true
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
 history_file="$HOME/.cache/kks-grep-history"
 query=""
 
 [ -f "$history_file" ] || touch "$history_file"
 [ "$(kks get %val[selection_length])" -gt 1 ] && query="$(kks get %val[selection])"
 
-RG_PREFIX="rg --vimgrep --hidden"
+# Set up RG_PREFIX based on hidden flag
+if [ "$hidden" = true ]; then
+    RG_PREFIX="rg --vimgrep --hidden"
+else
+    RG_PREFIX="rg --vimgrep"
+fi
 
 FZF_DEFAULT_COMMAND="$RG_PREFIX '$query'" \
   fzf --delimiter=":" \

@@ -172,6 +172,7 @@ map global find-actions -docstring 'git files'                         'g'  ':kk
 map global find-actions -docstring 'git changed files'                 'd'  ':kks-connect terminal-popup kks-git-changed-files<ret>'
 map global find-actions -docstring 'buffers'                           'b'  ':kks-connect terminal-popup kks-buffers<ret>'
 map global find-actions -docstring 'live grep(fzf)'                    'w'  ':kks-connect terminal-popup kks-grep<ret>'
+map global find-actions -docstring 'live grep all files(fzf)'          'W'  ':kks-connect terminal-popup kks-grep --hidden<ret>'
 map global find-actions -docstring 'browse file on github'             'B'  ':browse_github<ret>'
 map global find-actions -docstring 'file types'                        'y'  ':kks-connect terminal-popup kks-filetypes<ret>'
 map global find-actions -docstring 'file inside buffer basefolder'     'p'  ':basefolder-files<ret>'
