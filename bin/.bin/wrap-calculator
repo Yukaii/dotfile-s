@@ -74,14 +74,36 @@ get_word_boundary() {
     return
   fi
 
-  # Look for last space before max_width
-  local substr="${text:$start:$max_width}"
-  local last_space=$(echo "$substr" | grep -bo '[[:space:]]' | tail -n1 | cut -d: -f1)
+  # Get substring to examine
+  local substr="${text:$start}"
+  local char_count=0
+  local last_space=-1
+  local pos=$start
 
-  if [ -n "$last_space" ]; then
-    echo "$((start + last_space))"
+  # Scan characters up to max_width
+  while [ $char_count -lt $max_width ] && [ $pos -lt ${#text} ]; do
+    local char="${text:$pos:1}"
+
+    # Track last space
+    if [ "$char" = " " ]; then
+      last_space=$pos
+    fi
+
+    # Count character width (could be enhanced for Unicode)
+    char_count=$((char_count + 1))
+    pos=$((pos + 1))
+  done
+
+  # If we hit a word that exceeds line width
+  if [ $pos -lt ${#text} ] && [ $last_space -ne -1 ]; then
+    # Return position after last space
+    echo $((last_space + 1))
+  elif [ $last_space -ne -1 ] && [ $char_count -ge $max_width ]; then
+    # Return position after last space if we're at max width
+    echo $((last_space + 1))
   else
-    echo "$((start + max_width))"
+    # Force wrap at max width if no suitable break point
+    echo $((start + max_width))
   fi
 }
 
@@ -99,12 +121,16 @@ find_wrap_positions() {
     fi
 
     local next_pos=$(get_word_boundary "$text" "$current_pos" "$available_width")
-    if [ $next_pos -eq $current_pos ]; then
-      break
+
+    # Ensure we're making progress
+    if [ $next_pos -le $current_pos ]; then
+      next_pos=$((current_pos + available_width))
     fi
 
     positions="$positions $next_pos"
     current_pos=$next_pos
+
+    # Skip leading spaces on next line
     while [ $current_pos -lt $text_length ] && [ "${text:$current_pos:1}" = " " ]; do
       current_pos=$((current_pos + 1))
     done
