@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # search for pattern in workdir
 #
@@ -15,16 +15,18 @@ query=""
 
 RG_PREFIX="rg --vimgrep --hidden"
 
-FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
-	fzf --delimiter=":" \
-		--query="$query" \
-		--height="100%" \
-		--prompt="grep> " \
-		--history="$history_file" \
-		--highlight-line \
-		--bind "change:reload:$RG_PREFIX {q} $* || true" \
-		--exit-0 \
-		--phony \
-		--preview='range="$(echo {2}-5 | bc | sed "s/^-.*/0/"):$(echo {2}+20 | bc)"; bat -r "$range" -n --color always -H {2} {1}' |
-	awk -F':' '{print $1 " " "+" $2 ":" $3 }' |
-	xargs -r kks edit
+FZF_DEFAULT_COMMAND="$RG_PREFIX '$query'" \
+  fzf --delimiter=":" \
+    --query="$query" \
+    --height="100%" \
+    --prompt="grep> " \
+    --history="$history_file" \
+    --highlight-line \
+    --bind "change:reload:$RG_PREFIX {q} $* || true" \
+    --bind "ctrl-l:execute($RG_PREFIX {q} $* | kks-grep-to-buffer)+abort" \
+    --exit-0 \
+    --phony \
+    --header="[ctrl-l] send to grep buffer" \
+    --preview='range="$(echo {2}-5 | bc | sed "s/^-.*/0/"):$(echo {2}+20 | bc)"; bat -r "$range" -n --color always -H {2} {1}' |
+  awk -F':' '{print $1 " " "+" $2 ":" $3 }' |
+  xargs -r kks edit

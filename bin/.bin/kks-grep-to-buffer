@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+fifo_file=$(mktemp -u)
+mkfifo "$fifo_file"
+
+# Generate a random ID (using timestamp + random number)
+SPECIAL_ID=$(date +%s%N | md5sum | head -c 8)
+buffer_name="*qf-$SPECIAL_ID*"
+
+# Send command to create grep buffer with fifo
+kks send evaluate-commands %{ \
+  edit -fifo $fifo_file $buffer_name \
+  buffer $buffer_name \
+}
+
+kks send -b $buffer_name set-option buffer filetype grep
+
+cat > "$fifo_file"
+rm "$fifo_file"
