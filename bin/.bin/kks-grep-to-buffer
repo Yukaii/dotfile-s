@@ -3,9 +3,11 @@
 fifo_file=$(mktemp -u)
 mkfifo "$fifo_file"
 
-# Generate a random ID (using timestamp + random number)
-SPECIAL_ID=$(date +%s%N | md5sum | head -c 8)
-buffer_name="*qf-$SPECIAL_ID*"
+# Get query from first argument and escape it for buffer name
+query="$1"
+# Escape special characters and limit length
+safe_query=$(echo "$query" | sed 's/[^a-zA-Z0-9_-]/_/g' | cut -c1-32)
+buffer_name="*qf-${safe_query:-empty}*"
 
 # Send command to create grep buffer with fifo
 kks send evaluate-commands %{ \
