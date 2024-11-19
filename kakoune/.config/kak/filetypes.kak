@@ -12,3 +12,8 @@ hook global BufOpenFile .* %{
         fi
     }
 }
+
+hook global BufCreate .*[.](glsl) %{
+ set-option buffer filetype cpp
+}
+
