@@ -23,6 +23,7 @@ source "%val{config}/statusline.kak"
 source "%val{config}/jk.kak"
 source "%val{config}/locations.kak"
 source "%val{config}/flip-boolean.kak"
+# source "%val{config}/reasymotion.kak"
 # source "%val{config}/jump-stack.kak"
 # source "%val{config}/amber.kak"
 # source "%val{config}/bundle/kak-bundle/rc/kak-bundle.kak"
@@ -180,6 +181,7 @@ map global find-actions -docstring 'file under buffer basefolder'      'P'  ':ba
 map global find-actions -docstring 'edit file under buffer basefolder' 'e'  ':basefolder-edit<ret>'
 map global find-actions -docstring 'switch themes'                     'S'  ':colorscheme<space>'
 map global find-actions -docstring 'PR changed files'                  'c'  ':kks-connect terminal-popup kks-pr-diff-files<ret>'
+map global find-actions -docstring 'file types'                        's'  ':kks-connect terminal-popup kks-symbols<ret>'
 
 define-command basefolder-files -docstring 'file inside buffer basefolder' %{
 	evaluate-commands %sh{
