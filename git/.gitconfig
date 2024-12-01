@@ -101,3 +101,5 @@
 	theme-name = min-dark
 	; theme-name = solarized-dark
 	min-line-width = 40
+[gpg]
+	program = /opt/homebrew/bin/gpg
