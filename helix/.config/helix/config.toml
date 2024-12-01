@@ -103,8 +103,9 @@ S = "workspace_symbol_picker"
 d = "diagnostics_picker"
 D = "workspace_diagnostics_picker"
 
-# Harpoon mode
 [keys.normal.space.o]
+
+# Harpoon mode
 l = ":sh hx-utils harpoon list"
 a = ":sh hx-utils harpoon add"
 d = ":sh hx-utils harpoon remove"
@@ -119,7 +120,6 @@ e = ":sh hx-utils harpoon edit"
 8 = ":sh winmux -p 1 sp 'hx-utils harpoon open 8' > /dev/null"
 9 = ":sh winmux -p 1 sp 'hx-utils harpoon open 9' > /dev/null"
 
-
 [keys.normal.";"]
 q = ["goto_line_start", "select_mode", "move_next_long_word_end", ":pipe-to qf_hx_open", "collapse_selection", "normal_mode"]
 
@@ -132,6 +132,9 @@ w = ":sh hx-utils grep > /dev/null"
 d = ":sh hx-utils git-changed-files > /dev/null"
 p = "file_picker_in_current_buffer_directory"
 j = "jumplist_picker"
+e = "@:e <C-r>%<C-w>"
+x = "@:sh rm <C-r>%"
+
 
 [keys.insert]
 C-space = "completion"
