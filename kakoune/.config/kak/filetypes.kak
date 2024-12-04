@@ -3,6 +3,10 @@ hook global BufCreate .*[.]ejs %{
  set buffer tree_sitter_lang 'embedded-template'
 }
 
+hook global BufCreate .*\.tmux.conf %{
+  set-option buffer filetype conf
+}
+
 hook global BufOpenFile .* %{
     evaluate-commands %sh{
         # Check if the current buffer file path ends with "ghostty/config"

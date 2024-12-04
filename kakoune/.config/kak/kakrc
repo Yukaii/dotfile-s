@@ -433,10 +433,6 @@ hook global BufCreate .* %{
   autoconfigtab
 }
 
-hook global BufCreate .*\.tmux.conf %{
-  set-option buffer filetype conf
-}
-
 # Switch cursor color in insert mode
 # ──────────────────────────────────
 
