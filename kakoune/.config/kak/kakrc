@@ -23,6 +23,7 @@ source "%val{config}/statusline.kak"
 source "%val{config}/jk.kak"
 source "%val{config}/locations.kak"
 source "%val{config}/flip-boolean.kak"
+source "%val{config}/lsp.kak"
 # source "%val{config}/reasymotion.kak"
 # source "%val{config}/jump-stack.kak"
 # source "%val{config}/amber.kak"
@@ -40,6 +41,7 @@ set global tabstop 2
 
 # debug
 # set global lsp_cmd "kak-lsp -s %val{session} -vvvv --log /tmp/kak-lsp.log"
+# set global lsp_debug true
 
 set-option global ui_options terminal_assistant=none
 set-option global scrolloff 5,5
