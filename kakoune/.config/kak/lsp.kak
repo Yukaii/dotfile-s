@@ -90,3 +90,36 @@ hook -group lsp-filetype-gleam global BufSetOption filetype=(?:gleam) %{
   }
 }
 
+hook -group lsp-filetype-dockerfile global BufSetOption filetype=(?:dockerfile) %{
+  set-option buffer lsp_servers %{
+    [docker-langserver]
+    root_globs = [".git", ".hg"]
+    args = ["--stdio"]
+  }
+}
+
+
+hook -group lsp-filetype-vue global BufSetOption filetype=(?:vue) %{
+  set-option buffer lsp_servers %{
+    [vue-language-server]
+    root_globs = [".git", ".hg"]
+    args = ["--stdio"]
+    settings_section = "_"
+
+    [vue-language-server.settings._]
+    typescript = { tsdk = "node_modules/typescript/lib/" }
+
+    [typescript-language-server]
+    root_globs = ["package.json", "tsconfig.json", "jsconfig.json", ".git", ".hg"]
+    args = ["--stdio"]
+    settings_section = "_"
+
+    [[typescript-language-server.settings._.plugins]]
+    name = "@vue/typescript-plugin"
+    location = "/Users/yukai/.bun/install/global/node_modules/@vue/typescript-plugin"
+    languages = ["vue"]
+    # quotePreference = "double"
+    # typescript.format.semicolons = "insert"
+  }
+}
+

@@ -21,3 +21,7 @@ hook global BufCreate .*[.](glsl) %{
  set-option buffer filetype cpp
 }
 
+hook global BufCreate .*[.](vue) %{
+ set-option buffer filetype vue
+}
+

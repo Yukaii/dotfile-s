@@ -231,7 +231,7 @@ map global user g ': enter-user-mode git<ret>' -docstring "git mode"
 map global user T ': enter-user-mode tree-sitter<ret>' -docstring "Tree sitter mode"
 
 # kak-lsp
-hook global WinSetOption filetype=(rust|python|go|javascript|typescript|css|scss|json|markdown|toml|gleam|sh|yaml|dockerfile) %{
+hook global WinSetOption filetype=(rust|python|go|javascript|typescript|css|scss|json|markdown|toml|gleam|sh|yaml|dockerfile|vue) %{
   lsp-enable-window
 }
 
