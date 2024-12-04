@@ -1,7 +1,9 @@
 @builder.io/micro-agent@0.0.25
 @fedify/cli@1.2.0
+@mermaid-js/mermaid-cli@11.4.0
 @tailwindcss/language-server@0.0.16
 bash-language-server@5.4.2
+dockerfile-language-server-nodejs@0.13.0
 git-split-diffs@2.2.0
 http-server@14.1.1
 license@1.0.3
