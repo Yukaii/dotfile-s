@@ -130,6 +130,8 @@ language-servers = ["scls"]
 name = "crystal"
 language-servers = ["crystal"]
 
+# make sure you install @vue/language-server@1 (1.8.22)
+# However, kakoune-lsp works great with v2
 [[language]]
 name = "vue"
 auto-format = false
