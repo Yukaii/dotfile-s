@@ -2,6 +2,8 @@
 @fedify/cli@1.2.0
 @mermaid-js/mermaid-cli@11.4.0
 @tailwindcss/language-server@0.0.16
+@vue/language-server@2.1.10
+@vue/typescript-plugin@2.1.10
 bash-language-server@5.4.2
 dockerfile-language-server-nodejs@0.13.0
 git-split-diffs@2.2.0

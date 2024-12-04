@@ -114,10 +114,11 @@ hook -group lsp-filetype-vue global BufSetOption filetype=(?:vue) %{
     args = ["--stdio"]
     settings_section = "_"
 
+    # https://github.com/helix-editor/helix/discussions/10349
     [[typescript-language-server.settings._.plugins]]
     name = "@vue/typescript-plugin"
     location = "/Users/yukai/.bun/install/global/node_modules/@vue/typescript-plugin"
-    languages = ["vue"]
+    languages = ["javascript", "typescript", "vue"]
     # quotePreference = "double"
     # typescript.format.semicolons = "insert"
   }
