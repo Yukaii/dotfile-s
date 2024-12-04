@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Check if the correct number of arguments is provided
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 <line_number> <file_name> [--overwrite]"
+    exit 1
+fi
+
+LINE_NUMBER=$1
+FILE_NAME=$2
+OVERWRITE=false
+
+# Check if the overwrite option is provided
+if [ "$3" == "--overwrite" ]; then
+    OVERWRITE=true
+fi
+
+# Check if the specified line number is positive
+if ! [[ "$LINE_NUMBER" =~ ^[0-9]+$ ]] || [ "$LINE_NUMBER" -le 0 ]; then
+    echo "Invalid line number: must be a positive integer."
+    exit 1
+fi
+
+# Temporary file
+TEMP_FILE="temp_file.txt"
+
+# Preserve the first <line_number> lines
+head -n "$LINE_NUMBER" "$FILE_NAME" > "$TEMP_FILE"
+
+# Overwrite the original file if specified
+if [ "$OVERWRITE" = true ]; then
+    mv "$TEMP_FILE" "$FILE_NAME"
+    echo "Overwritten '$FILE_NAME' with the first $LINE_NUMBER lines."
+else
+    echo "Created '$TEMP_FILE' with the first $LINE_NUMBER lines."
+fi
+
