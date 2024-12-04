@@ -1,3 +1,5 @@
+# Language servers config
+
 [language-server.eslint]
 command = "vscode-eslint-language-server"
 args = ["--stdio"]
@@ -53,6 +55,12 @@ filetypes = ["crystal"]
 command = "crystalline"
 args = ["--stdio"]
 
+
+[language-server.ctags-lsp]
+command = "ctags-lsp"
+
+
+# Languages config
 
 [[language]]
 name = "git-commit"
@@ -116,3 +124,4 @@ language-servers = ["scls", "taplo"]
 [[language]]
 name = "crystal"
 language-servers = ["crystal"]
+
