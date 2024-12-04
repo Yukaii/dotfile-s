@@ -1,5 +1,10 @@
 # Language servers config
 
+[[language-server.typescript-language-server.config.plugins]]
+name = "@vue/typescript-plugin"
+location = "/Users/yukai/.bun/install/global/node_modules/@vue/typescript-plugin"
+languages = ["javascript", "typescript", "vue"]
+
 [language-server.eslint]
 command = "vscode-eslint-language-server"
 args = ["--stdio"]
@@ -119,9 +124,15 @@ language-servers = ["vscode-css-language-server", "scls"]
 
 [[language]]
 name = "toml"
-language-servers = ["scls", "taplo"]
+language-servers = ["scls"]
 
 [[language]]
 name = "crystal"
 language-servers = ["crystal"]
+
+[[language]]
+name = "vue"
+auto-format = false
+formatter = { command = "prettier", args = ["--parser", "vue"] }
+language-servers = ["vuels", "typescript-language-server", "scls"]
 
