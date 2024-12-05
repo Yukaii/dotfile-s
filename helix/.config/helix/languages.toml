@@ -9,6 +9,9 @@ languages = ["javascript", "typescript", "vue"]
 command = "vscode-eslint-language-server"
 args = ["--stdio"]
 
+[language-server.vuels.config]
+vue = { hybridMode = true }
+
 [language-server.eslint.config]
 codeActionsOnSave = { mode = "all", "source.fixAll.eslint" = true }
 format = { enable = true }
