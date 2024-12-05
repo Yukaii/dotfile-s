@@ -98,15 +98,50 @@ function start_dnstt
 end
 
 # Shell Integrations and Completions
-oh-my-posh init fish --config (mbrew --prefix oh-my-posh)"/themes/uew.omp.json" | source
-volta completions fish | source
-sg completions fish | source
-fzf --fish | source
-kubectl completion fish | source
-fnm env --use-on-cd | source
-zoxide init fish | source
-atuin init fish | source
-# mise activate fish | source
-if test -n "$WEZTERM_PANE"
-  wezterm shell-completion --shell fish | source
+if command -q oh-my-posh
+  oh-my-posh init fish --config (mbrew --prefix oh-my-posh)"/themes/uew.omp.json" | source
+  oh-my-posh completion fish | source
+end
+
+if command -q volta
+  volta completions fish | source
+end
+
+if command -q sg
+  sg completions fish | source
+end
+
+if command -q fzf
+  fzf --fish | source
+end
+
+if command -q kubectl
+  kubectl completion fish | source
+end
+
+if command -q fnm
+  fnm env --use-on-cd | source
+  fnm completions | source
+end
+
+if command -q zoxide
+  zoxide init fish | source
+end
+
+if command -q atuin
+  atuin init fish | source
+end
+
+# if command -q mise
+#   mise activate fish | source
+# end
+
+if set -q WEZTERM_PANE
+  if command -q wezterm
+    wezterm shell-completion --shell fish | source
+  end
+end
+
+if command -q hub-tool
+  hub-tool completion fish | source
 end
