@@ -4,7 +4,7 @@
 #
 # requires:
 # - fzf (https://github.com/junegunn/fzf)
-# - bat (change to your liking) (https://github.com/sharkdp/bat)
+# - bat (https://github.com/sharkdp/bat)
 #
 # for this to work, add the following in kakrc:
 # (requires sponge from moreutils: https://joeyh.name/code/moreutils/)

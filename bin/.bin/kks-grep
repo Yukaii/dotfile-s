@@ -5,7 +5,7 @@
 # requires:
 # - ripgrep (https://github.com/BurntSushi/ripgrep)
 # - fzf (https://github.com/junegunn/fzf)
-# - bat (change to your liking) (https://github.com/sharkdp/bat)
+# - bat (https://github.com/sharkdp/bat)
 
 # Parse arguments
 hidden=false
