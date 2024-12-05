@@ -13,6 +13,7 @@ hook -group lsp-filetype-javascript global BufSetOption filetype=(?:javascript|t
     args = ["--stdio"]
     workaround_eslint = true
     [vscode-eslint-language-server.settings]
+    nodePath = ""
     codeActionsOnSave = { mode = "all", "source.fixAll.eslint" = true }
     format = { enable = true }
     quiet = false
