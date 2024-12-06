@@ -19,7 +19,7 @@ FZF_DEFAULT_COMMAND="git ls-files --full-name $(git rev-parse --show-toplevel)" 
     --preview "$preview_cmd {}" \
     --history="$history_file" \
     --header="[ctrl-l] send to files buffer" \
-    --bind "ctrl-l:execute(git ls-files --full-name $(git rev-parse --show-toplevel) | fzf --filter={q} | sed 's|$|:1:1:|' | kks-grep-to-buffer)+abort" |
+    --bind "ctrl-l:execute(git ls-files --full-name $(git rev-parse --show-toplevel) | fzf --filter={q} | sed 's|$|:1:1:|' | kks-pipe-to-grep-buffer)+abort" |
   while read -r file; do
     kks edit "${file}"
   done

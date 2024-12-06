@@ -4,9 +4,9 @@ fifo_file=$(mktemp -u)
 mkfifo "$fifo_file"
 
 # Get query from first argument and escape it for buffer name
-query="$1"
+base_buffer_name="$1"
 # Escape special characters and limit length
-safe_query=$(echo "$query" | sed 's/[^a-zA-Z0-9_-]/_/g' | cut -c1-32)
+safe_query=$(echo "$base_buffer_name" | sed 's/[^a-zA-Z0-9_-]/_/g' | cut -c1-32)
 
 # Generate a random string if safe_query is empty
 random_string=$(openssl rand -hex 4)

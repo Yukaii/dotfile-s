@@ -16,7 +16,7 @@ FZF_DEFAULT_COMMAND="rg --hidden --no-ignore -l '' $@" \
   fzf --multi --height 100% --highlight-line --prompt 'files> ' \
     --preview "$preview_cmd {}" --history="$history_file" \
     --header="[ctrl-l] send to files buffer" \
-    --bind "ctrl-l:execute(rg --hidden --no-ignore -l '' $@ | fzf --filter={q} | sed 's|$|:1:1:|' | kks-grep-to-buffer)+abort" |
+    --bind "ctrl-l:execute(rg --hidden --no-ignore -l '' $@ | fzf --filter={q} | sed 's|$|:1:1:|' | kks-pipe-to-grep-buffer)+abort" |
   while read -r file; do
     kks edit "${file}"
   done
