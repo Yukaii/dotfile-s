@@ -188,14 +188,14 @@ map global find-actions -docstring 'file types'                        's'  ':kk
 define-command basefolder-files -docstring 'file inside buffer basefolder' %{
 	evaluate-commands %sh{
     dir=$(dirname "$kak_bufname")
-    echo "kks-connect terminal-popup kks-files --max-depth=1 \"$dir\"<ret>"
+    echo "kks-connect terminal-popup kks-files --max-depth=1 \"$dir\""
 	}
 }
 
 define-command basefolder-top-files -docstring 'toplevel file inside buffer basefolder' %{
 	evaluate-commands %sh{
     dir=$(dirname "$(dirname "$kak_bufname")")
-    echo "kks-connect terminal-popup kks-files --max-depth=1 \"$dir\"<ret>"
+    echo "kks-connect terminal-popup kks-files --max-depth=1 \"$dir\""
 	}
 }
 
