@@ -97,51 +97,10 @@ function start_dnstt
   dnstt-client -doh https://cloudflare-dns.com/dns-query -pubkey-file $DNSTT_PUB_KEY_PATH $DNS_TUNNEL 127.0.0.1:8000
 end
 
-# Shell Integrations and Completions
-if command -q oh-my-posh
-  oh-my-posh init fish --config (mbrew --prefix oh-my-posh)"/themes/uew.omp.json" | source
-  oh-my-posh completion fish | source
-end
-
-if command -q volta
-  volta completions fish | source
-end
-
-if command -q sg
-  sg completions fish | source
-end
-
-if command -q fzf
-  fzf --fish | source
-end
-
-if command -q kubectl
-  kubectl completion fish | source
-end
-
 if command -q fnm
   fnm env --use-on-cd | source
-  fnm completions | source
 end
 
-if command -q zoxide
-  zoxide init fish | source
-end
-
-if command -q atuin
-  atuin init fish | source
-end
-
-# if command -q mise
-#   mise activate fish | source
-# end
-
-if set -q WEZTERM_PANE
-  if command -q wezterm
-    wezterm shell-completion --shell fish | source
-  end
-end
-
-if command -q hub-tool
-  hub-tool completion fish | source
+if command -q oh-my-posh
+  oh-my-posh init fish --config (mbrew --prefix oh-my-posh)"/themes/uew.omp.json" | source
 end
