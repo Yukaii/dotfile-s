@@ -1,0 +1,40 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = "~ $username $git_branch$shell $fill $cmd_duration 󰇝 $time $nodejs \n~ $directory ~ "
+
+[username]
+format = "[$user]($style)"
+style_user = 'dimmed white'
+show_always = true
+
+[git_branch]
+format = "[ ](bold white) [ $branch]($style)"
+style = 'bright-purple'
+
+[time]
+format = "$time"
+time_format = "%a at %I:%M %p"
+use_12hr = true
+disabled = false
+
+[shell]
+fish_indicator = 'fish'
+disabled = false
+format = '[  ](bold white)[$indicator]($style)'
+style = 'bright-purple'
+
+[nodejs]
+format = " [ $version](dimmed white)"
+version_format ="${raw}"
+
+[directory]
+format = '[ $path]($style)[$read_only]($read_only_style) '
+truncation_length = 8
+fish_style_pwd_dir_length = 80
+
+[cmd_duration]
+min_time = 0
+show_milliseconds = true
+format = '[$duration]($style)'
+style = 'dimmed white'
+
