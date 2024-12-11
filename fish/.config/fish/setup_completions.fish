@@ -11,7 +11,7 @@ end
 
 # Shell Integrations and Completions
 if command -q oh-my-posh
-  oh-my-posh init fish --config (mbrew --prefix oh-my-posh)"/themes/uew.omp.json" > $completions_dir/oh-my-posh.fish
+  # oh-my-posh init fish --config (mbrew --prefix oh-my-posh)"/themes/uew.omp.json" > $completions_dir/oh-my-posh.fish
   oh-my-posh completion fish >> $completions_dir/oh-my-posh.fish
 end
 
