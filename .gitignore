@@ -16,6 +16,16 @@ fish/.config/fisherman
 fish/.config/fish/fishd.*
 fish/.config/fish/secrets.fish
 
+# static generated completions
+fish/.config/fish/completions/volta.fish
+fish/.config/fish/completions/atuin.fish
+fish/.config/fish/completions/fnm.fish
+fish/.config/fish/completions/fzf.fish
+fish/.config/fish/completions/hub-tool.fish
+fish/.config/fish/completions/sg.fish
+fish/.config/fish/completions/oh-my-posh.fish
+fish/.config/fish/completions/zoxide.fish
+
 zed/.config/zed/conversations/*
 zed/.config/zed/embeddings/*
 zed/.config/zed/.tmp*
