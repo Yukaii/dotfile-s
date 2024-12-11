@@ -354,16 +354,17 @@ define-command grup-write -docstring "
   }
 }
 
-define-command format-indent -params 2 -docstring '
-  indentfmt <indent-type> <size>: Format current buffer indentation
-  indent-type: space or tab
-  size: indentation size (number)
+define-command format-indent -params 0..2 -docstring '
+  indentfmt [indent-type] [size]: Format current buffer indentation
+  indent-type: space or tab (default: space)
+  size: indentation size (number) (default: 2)
 ' -shell-script-candidates %{
   printf "space\ntab\n"
 } %{
   evaluate-commands %sh{
-    indent_type="$1"
-    indent_size="$2"
+    # Set defaults
+    indent_type="${1:-space}"
+    indent_size="${2:-2}"
 
     # Validate indent type
     if [ "$indent_type" != "space" ] && [ "$indent_type" != "tab" ]; then
