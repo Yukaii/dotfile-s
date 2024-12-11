@@ -101,6 +101,17 @@ if command -q fnm
   fnm env --use-on-cd | source
 end
 
-if command -q oh-my-posh
-  oh-my-posh init fish --config (mbrew --prefix oh-my-posh)"/themes/uew.omp.json" | source
+# if command -q oh-my-posh
+#   oh-my-posh init fish --config (mbrew --prefix oh-my-posh)"/themes/uew.omp.json" | source
+# end
+
+if command -q starship
+  starship init fish | source
 end
+
+if command -q atuin
+  atuin init fish | source
+end
+
+zoxide init fish | source
+

@@ -17,28 +17,35 @@ end
 
 
 if command -q sg
-    sg completions fish > $completions_dir/sg.fish
+  sg completions fish > $completions_dir/sg.fish
 end
 
 if command -q fzf
-    fzf --fish > $completions_dir/fzf.fish
+  fzf --fish > $completions_dir/fzf.fish
 end
 
 if command -q kubectl
-    kubectl completion fish > $completions_dir/kubectl.fish
+  kubectl completion fish > $completions_dir/kubectl.fish
 end
 
 if command -q fnm
-    # Completions
-    fnm completions > $completions_dir/fnm.fish
+  # Completions
+  fnm completions > $completions_dir/fnm.fish
 end
 
 if command -q zoxide
-    zoxide init fish > $completions_dir/zoxide.fish
-end
+  echo "
+# Disable file completions for zoxide
+complete -c zoxide -f
 
-if command -q atuin
-    atuin init fish > $completions_dir/atuin.fish
+# Subcommand completions
+complete -c zoxide -n '__fish_use_subcommand' -a 'add' -d 'Add a new directory or increment its rank'
+complete -c zoxide -n '__fish_use_subcommand' -a 'edit' -d 'Edit the database'
+complete -c zoxide -n '__fish_use_subcommand' -a 'import' -d 'Import entries from another application'
+complete -c zoxide -n '__fish_use_subcommand' -a 'init' -d 'Generate shell configuration'
+complete -c zoxide -n '__fish_use_subcommand' -a 'query' -d 'Search for a directory in the database'
+complete -c zoxide -n '__fish_use_subcommand' -a 'remove' -d 'Remove a directory from the database'
+  " >> $completions_dir/zoxide.fish
 end
 
 #if command -q mise
@@ -48,11 +55,11 @@ end
 #end
 
 if set -q WEZTERM_PANE
-    if command -q wezterm
-        wezterm shell-completion --shell fish > $completions_dir/wezterm.fish
-    end
+  if command -q wezterm
+    wezterm shell-completion --shell fish > $completions_dir/wezterm.fish
+  end
 end
 
 if command -q hub-tool
-    hub-tool completion fish > $completions_dir/hub-tool.fish
+  hub-tool completion fish > $completions_dir/hub-tool.fish
 end
