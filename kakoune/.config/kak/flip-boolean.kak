@@ -18,7 +18,7 @@ define-command -hidden setup-return-mapping %{
   # Check if the filetype matches json, javascript, typescript, or toml
   evaluate-commands %sh{
     case "$kak_opt_filetype" in
-      json|javascript|typescript|toml)
+      json|javascript|typescript|toml|terraform)
         echo "unmap buffer normal <ret>"
         echo "map buffer normal <ret> ':flip-boolean<ret>'"
         ;;
