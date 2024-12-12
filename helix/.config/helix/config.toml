@@ -1,5 +1,5 @@
-# theme = "kanagawa"
-theme = "darkvoid"
+theme = "kanagawa"
+# theme = "darkvoid"
 
 [editor]
 true-color = true
