@@ -233,9 +233,14 @@ tab-group:has(tab[hidden]) {
 } */
 
 /* ------ */
+
 #zen-tabbox-wrapper {
-  border-radius: 6px;
+  border-radius: 6px !important;
   overflow: hidden;
+}
+
+.browserSidebarContainer {
+  border-radius: 6px !important;
 }
 
 :root {
