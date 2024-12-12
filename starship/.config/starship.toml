@@ -1,6 +1,8 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-format = "[~](bright-purple) $username $git_branch$git_state$shell $fill $cmd_duration 󰇝 $time$nodejs\n[~](bright-purple) ${custom.spaced_dir} $character"
+format = """[~](bright-purple) $username $git_branch$git_state$shell $fill $cmd_duration 󰇝 ${custom.day} [at](bold white) ${custom.time} $nodejs
+[~](bright-purple) ${custom.spaced_dir} $character
+"""
 
 [username]
 format = "[$user]($style)"
@@ -36,12 +38,6 @@ version_format ="${raw}"
 # fish_style_pwd_dir_length = 40
 # style = "bright-cyan"
 
-[custom.spaced_dir]
-command = "~/.bin/spaced-path"
-format = "[ $output]($style)"
-style = "bright-blue"
-when = true
-
 [cmd_duration]
 min_time = 1
 show_milliseconds = true
@@ -54,3 +50,23 @@ style = 'bright-red'
 [character]
 error_symbol = "[~](bold red)"
 success_symbol = "[~](bold green)"
+
+
+[custom.spaced_dir]
+command = """p=${PWD/#$HOME/home}; echo "$p" | sed 's|/| / |g'"""
+format = "[ $output]($style)"
+shell = "bash"
+style = "bright-blue"
+when = true
+
+[custom.day]
+command = """date '+%a'"""
+shell = "bash"
+format = "[${output}](dimmed white)"
+when = true
+
+[custom.time]
+command = """date '+%-l:%M %p'"""
+shell = "bash"
+format = "[${output}](dimmed white)"
+when = true
