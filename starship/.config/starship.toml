@@ -1,6 +1,6 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-format = "~ $username $git_status$git_branch$git_state$shell $fill $cmd_duration 󰇝 $time$nodejs\n~ $directory ~ "
+format = "[~](bright-purple) $username $git_branch$git_state$shell $fill $cmd_duration 󰇝 $time$nodejs\n[~](bright-purple) $directory$character"
 
 [username]
 format = "[$user]($style)"
@@ -16,14 +16,14 @@ symbol = ' '
 
 [time]
 format = "$time"
-time_format = "%a at %I:%M %p"
+time_format = "%a at %-l:%M %p"
 use_12hr = true
 disabled = false
 
 [shell]
 fish_indicator = 'fish'
 disabled = false
-format = '[  ](bold white)[$indicator]($style)'
+format = '[  ](bold white) [$indicator]($style)'
 style = 'bright-purple'
 
 [nodejs]
@@ -43,3 +43,7 @@ style = 'dimmed white'
 
 [git_status]
 style = 'bright-red'
+
+[character]
+error_symbol = "[~](bold red)"
+success_symbol = "[~](bold green)"
