@@ -1,10 +1,10 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-format = "[~](bright-purple) $username $git_branch$git_state$shell $fill $cmd_duration 󰇝 $time$nodejs\n[~](bright-purple) $directory$character"
+format = "[~](bright-purple) $username $git_branch$git_state$shell $fill $cmd_duration 󰇝 $time$nodejs\n[~](bright-purple) ${custom.spaced_dir} $character"
 
 [username]
 format = "[$user]($style)"
-style_user = 'dimmed white'
+style_user = 'light-white'
 show_always = true
 
 [git_branch]
@@ -27,13 +27,20 @@ format = '[  ](bold white) [$indicator]($style)'
 style = 'bright-purple'
 
 [nodejs]
-format = " [ $version](dimmed white)"
+format = " [](green) [$version](dimmed white)"
 version_format ="${raw}"
 
-[directory]
-format = '[ $path]($style)[$read_only]($read_only_style) '
-truncation_length = 8
-fish_style_pwd_dir_length = 80
+# [directory]
+# format = '[ $path]($style)[$read_only]($read_only_style) '
+# truncation_length = 8
+# fish_style_pwd_dir_length = 40
+# style = "bright-cyan"
+
+[custom.spaced_dir]
+command = "~/.bin/spaced-path"
+format = "[ $output]($style)"
+style = "bright-blue"
+when = true
 
 [cmd_duration]
 min_time = 1
