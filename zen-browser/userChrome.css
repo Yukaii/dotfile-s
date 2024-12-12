@@ -234,12 +234,12 @@ tab-group:has(tab[hidden]) {
 
 /* ------ */
 #zen-tabbox-wrapper {
-  border-radius: 10px;
+  border-radius: 6px;
   overflow: hidden;
 }
 
 :root {
-  --zen-element-separation: 10px;
+  --zen-element-separation: 10px !important;
 }
 
 @media (-moz-bool-pref: "zen.view.compact") {
@@ -247,9 +247,13 @@ tab-group:has(tab[hidden]) {
     @media (-moz-bool-pref: "zen.view.compact.hide-tabbar") {
       & #navigator-toolbox {
         :root[zen-single-toolbar="true"] & {
-          top: 0;
-          /* transform: translateX(calc(100% - 3px)); */
+          top: -1px !important;
+          bottom: 6px !important;
         }
+      }
+
+      & #navigator-toolbox[zen-has-hover] {
+        transform: translateX(calc(100% - var(--zen-element-separation) - 2px)) !important;
       }
     }
   }
