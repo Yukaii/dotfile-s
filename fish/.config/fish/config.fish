@@ -1,3 +1,5 @@
+set fish_greeting
+
 # Configuration and Secrets
 source $__fish_config_dir/secrets.fish
 source $__fish_config_dir/aliases.fish
