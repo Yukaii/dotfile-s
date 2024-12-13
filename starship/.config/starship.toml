@@ -60,7 +60,7 @@ style = "#B6D6F2"
 when = true
 
 [custom.day]
-command = """date '+%a'"""
+command = """date '+%A'"""
 shell = "bash"
 format = "[${output}](dimmed white)"
 when = true
