@@ -1,7 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-format = """[~](bright-purple) $username $git_branch$git_state$shell $fill $cmd_duration ${custom.day} [at](bold white) ${custom.time} $nodejs
-[~](bright-purple) ${custom.spaced_dir} $character
+format = """[~](#BFA8BF) $username $git_branch$git_state$shell $fill $cmd_duration ${custom.day} [at](bold white) ${custom.time} $nodejs
+[~](#BFA8BF) ${custom.spaced_dir} $character
 """
 
 [username]
@@ -11,7 +11,7 @@ show_always = true
 
 [git_branch]
 format = "[ ](bold white) [ $branch]($style)"
-style = 'bright-purple'
+style = '#BFA8BF'
 
 [fill]
 symbol = ' '
@@ -26,10 +26,10 @@ symbol = ' '
 fish_indicator = 'fish'
 disabled = false
 format = '[  ](bold white) [$indicator]($style)'
-style = 'bright-purple'
+style = '#BFA8BF'
 
 [nodejs]
-format = " [](green) [$version](dimmed white)"
+format = " [](green) [$version](dimmed white) "
 version_format ="${raw}"
 
 # [directory]
@@ -53,10 +53,10 @@ success_symbol = "[~](bold green)"
 
 
 [custom.spaced_dir]
-command = """p=${PWD/#$HOME/home}; echo "$p" | sed 's|/| / |g'"""
+command = """p=${PWD/#$HOME/home}; p=${p#/}; echo "$p" | sed 's|/| / |g'"""
 format = "[ $output]($style)"
 shell = "bash"
-style = "bright-blue"
+style = "#B6D6F2"
 when = true
 
 [custom.day]
