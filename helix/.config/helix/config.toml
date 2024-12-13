@@ -53,7 +53,6 @@ C-l = "select_next_sibling"
 C-y = ["scroll_up"]
 C-e = ["scroll_down"]
 esc = ["collapse_selection", "keep_primary_selection"]
-g = { d = "goto_definition", D = ["vsplit", "goto_definition"], j = "goto_last_line", k = "goto_file_start" }
 ret = ["goto_word"]
 
 # Kakoune inspired keymapping
@@ -67,6 +66,14 @@ L = "extend_char_right"
 '{' = ["select_mode", "goto_prev_paragraph"]
 '}' = ["select_mode", "goto_next_paragraph"]
 x = ["select_mode", "extend_line_below"]
+
+[keys.normal.g]
+d = "goto_definition"
+D = ["vsplit", "goto_definition"]
+j = "goto_last_line"
+k = "goto_file_start"
+J = "goto_last_line"
+K = "goto_file_start"
 
 [keys.select]
 # Escape the madness! No more fighting with the cursor! Or with multiple cursors!
@@ -84,6 +91,8 @@ L = "extend_char_right"
 [keys.select.g]
 j = "goto_last_line"
 k = "goto_file_start"
+J = "goto_last_line"
+K = "goto_file_start"
 
 [keys.normal.G]
 J = ["select_mode", "goto_last_line"]
