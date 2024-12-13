@@ -5,7 +5,8 @@ export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
 ompconfig=$(brew --prefix oh-my-posh)
-eval "$(oh-my-posh init zsh --config $ompconfig/themes/uew.omp.json)"
+# eval "$(oh-my-posh init zsh --config $ompconfig/themes/uew.omp.json)"
+eval "$(starship init zsh)"
 
 eval "$(atuin init zsh)"
 eval "$(fzf --zsh)"
