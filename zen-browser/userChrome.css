@@ -134,11 +134,6 @@
   }
 }
 
-/* --- Hide the Workspace Indicator --- */
-#zen-current-workspace-indicator {
-  display: none !important;
-}
-
 .tab-reset-button {
   display: none !important;
 }
