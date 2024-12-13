@@ -66,6 +66,36 @@ H = "extend_char_left"
 L = "extend_char_right"
 '{' = ["select_mode", "goto_prev_paragraph"]
 '}' = ["select_mode", "goto_next_paragraph"]
+x = ["select_mode", "extend_line_below"]
+
+[keys.select]
+# Escape the madness! No more fighting with the cursor! Or with multiple cursors!
+esc = ["collapse_selection", "keep_primary_selection", "normal_mode"]
+'{' = "goto_prev_paragraph"
+'}' = "goto_next_paragraph"
+E = ["extend_next_word_end"]
+W = ["extend_next_word_start"]
+B = ["extend_prev_word_end"]
+K = "extend_line_up"
+J = "extend_line_down"
+H = "extend_char_left"
+L = "extend_char_right"
+
+[keys.select.g]
+j = "goto_last_line"
+k = "goto_file_start"
+
+[keys.normal.G]
+J = ["select_mode", "goto_last_line"]
+K = ["select_mode", "goto_file_start"]
+L = ["select_mode", "goto_line_end"]
+H = ["select_mode", "goto_line_start"]
+
+[keys.select.G]
+J = "goto_last_line"
+K = "goto_file_start"
+L = "goto_line_end"
+H = "goto_line_start"
 
 [keys.normal.space]
 w   = ":write"
@@ -178,12 +208,3 @@ C-space = "completion"
 S-tab = "unindent"
 esc = ["collapse_selection", "normal_mode"]
 
-[keys.select]
-# Escape the madness! No more fighting with the cursor! Or with multiple cursors!
-esc = ["collapse_selection", "keep_primary_selection", "normal_mode"]
-'{' = "goto_prev_paragraph"
-'}' = "goto_next_paragraph"
-
-[keys.select.g]
-j = "goto_last_line"
-k = "goto_file_start"
