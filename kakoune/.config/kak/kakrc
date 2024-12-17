@@ -39,10 +39,6 @@ set global tabstop 2
 # enable autocomplete trigger
 # set global autocomplete prompt
 
-# debug
-# set global lsp_cmd "kak-lsp -s %val{session} -vvvv --log /tmp/kak-lsp.log"
-# set global lsp_debug true
-
 set-option global ui_options terminal_assistant=none
 set-option global scrolloff 5,5
 set-option global startup_info_version 20230805
@@ -230,39 +226,10 @@ map globa user 'j' -docstring 'Enter jump mode' ':enter-user-mode jump-actions<r
 map global user g ': enter-user-mode git<ret>' -docstring "git mode"
 map global user T ': enter-user-mode tree-sitter<ret>' -docstring "Tree sitter mode"
 
-# kak-lsp
-hook global WinSetOption filetype=(rust|python|go|javascript|typescript|css|scss|json|markdown|toml|gleam|sh|yaml|dockerfile|vue) %{
-  lsp-enable-window
-}
-
-set-face global DiagnosticTagDeprecated +s
-set-face global DiagnosticTagUnnecessary dim
-
-lsp-inlay-hints-enable       global
-lsp-diagnostic-lines-enable global
-lsp-inlay-diagnostics-enable global
-
-set-option global lsp_hover_anchor false
-
-map global lsp 'D' ':lsp-diagnostics<ret>' -docstring 'LSP diagnostics'
-map global lsp 'w' ':lsp-workspace-symbol-incr<ret>' -docstring 'LSP workspace symbol'
-
-# lsp related mappings
-map global insert <tab> '<a-;>:try lsp-snippets-select-next-placeholders catch %{ execute-keys -with-hooks <lt>tab> }<ret>' -docstring 'Select next snippet placeholder'
-map global object a '<a-semicolon>lsp-object<ret>'                               -docstring 'LSP any symbol'
-map global object <a-a> '<a-semicolon>lsp-object<ret>'                           -docstring 'LSP any symbol'
-map global object e '<a-semicolon>lsp-object Function Method<ret>'               -docstring 'LSP function or method'
-map global object k '<a-semicolon>lsp-object Class Interface Struct<ret>'        -docstring 'LSP class interface or struct'
-map global object d '<a-semicolon>lsp-diagnostic-object --include-warnings<ret>' -docstring 'LSP errors and warnings'
-map global object D '<a-semicolon>lsp-diagnostic-object<ret>'                    -docstring 'LSP errors'
-
-set-option global lsp_auto_show_code_actions true
-
 # More objecct mapping from https://discuss.kakoune.com/t/useful-objects/58
 map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>,<lt>/([\w.]+)\b[^>]*?(?<lt>!/)><ret>}
 map global object h 'c<gt>,<lt><ret>' -docstring "select in the (html) angle brackets"
 map global object o 'c\s,\s<ret>'     -docstring "select inbetween the whitespace"
-
 
 define-command -hidden wrap-calc -params 4 %{
   evaluate-commands %sh{

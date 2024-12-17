@@ -1,3 +1,35 @@
+# debug
+# set global lsp_cmd "kak-lsp -s %val{session} -vvvv --log /tmp/kak-lsp.log"
+# set global lsp_debug true
+
+# kak-lsp
+hook global WinSetOption filetype=(rust|python|go|javascript|typescript|css|scss|json|markdown|toml|gleam|sh|yaml|dockerfile|vue|elixir) %{
+  lsp-enable-window
+}
+
+set-face global DiagnosticTagDeprecated +s
+set-face global DiagnosticTagUnnecessary dim
+
+lsp-inlay-hints-enable       global
+lsp-diagnostic-lines-enable global
+lsp-inlay-diagnostics-enable global
+
+set-option global lsp_hover_anchor false
+
+map global lsp 'D' ':lsp-diagnostics<ret>' -docstring 'LSP diagnostics'
+map global lsp 'w' ':lsp-workspace-symbol-incr<ret>' -docstring 'LSP workspace symbol'
+
+# lsp related mappings
+map global insert <tab> '<a-;>:try lsp-snippets-select-next-placeholders catch %{ execute-keys -with-hooks <lt>tab> }<ret>' -docstring 'Select next snippet placeholder'
+map global object a '<a-semicolon>lsp-object<ret>'                               -docstring 'LSP any symbol'
+map global object <a-a> '<a-semicolon>lsp-object<ret>'                           -docstring 'LSP any symbol'
+map global object e '<a-semicolon>lsp-object Function Method<ret>'               -docstring 'LSP function or method'
+map global object k '<a-semicolon>lsp-object Class Interface Struct<ret>'        -docstring 'LSP class interface or struct'
+map global object d '<a-semicolon>lsp-diagnostic-object --include-warnings<ret>' -docstring 'LSP errors and warnings'
+map global object D '<a-semicolon>lsp-diagnostic-object<ret>'                    -docstring 'LSP errors'
+
+set-option global lsp_auto_show_code_actions true
+
 hook -group lsp-filetype-javascript global BufSetOption filetype=(?:javascript|typescript) %{
   set-option buffer lsp_servers %{
     [typescript-language-server]
@@ -125,3 +157,9 @@ hook -group lsp-filetype-vue global BufSetOption filetype=(?:vue) %{
   }
 }
 
+hook -group lsp-filetype-vue global BufSetOption filetype=(?:elixir) %{
+  set-option buffer lsp_servers %{
+    [elixir-ls]
+    root_globs = ["mix.exs", "mix.lock"]
+  }
+}
