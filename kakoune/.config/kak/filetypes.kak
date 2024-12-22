@@ -7,6 +7,10 @@ hook global BufCreate .*\.tmux.conf %{
   set-option buffer filetype conf
 }
 
+hook global BufCreate .*\.env.* %{
+  set-option buffer filetype sh
+}
+
 hook global BufOpenFile .* %{
     evaluate-commands %sh{
         # Check if the current buffer file path ends with "ghostty/config"
