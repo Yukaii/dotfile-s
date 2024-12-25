@@ -17,6 +17,7 @@ fish_add_path "$HOME/.local/bin/hx-utils-bin"
 fish_add_path "$HOME/.cargo/bin"
 fish_add_path "$HOME/go/bin"
 fish_add_path "$HOME/.bun/bin"
+fish_add_path "$HOME/.mix/escripts"
 
 # Homebrew paths for different architectures
 set arc (arch)
@@ -109,6 +110,7 @@ end
 
 if command -q starship
   starship init fish | source
+  enable_transience
 end
 
 if command -q atuin
