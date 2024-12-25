@@ -43,6 +43,7 @@ min_time = 1
 show_milliseconds = true
 format = '[$duration]($style) 󰇝'
 style = 'dimmed white'
+show_notifications = true
 
 [git_status]
 style = 'bright-red'
