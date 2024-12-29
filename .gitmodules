@@ -13,3 +13,6 @@
 [submodule "ghostty/.config/ghostty/shaders"]
 	path = ghostty/.config/ghostty/shaders
 	url = git@github.com:hackrmomo/ghostty-shaders.git
+[submodule "ghostty/.config/ghostty/themes/noctis-themes"]
+	path = ghostty/.config/ghostty/themes/noctis-themes
+	url = https://github.com/eastsun5566/ghostty-noctis-themes.git
