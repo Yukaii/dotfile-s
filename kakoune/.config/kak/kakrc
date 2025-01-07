@@ -24,6 +24,7 @@ source "%val{config}/jk.kak"
 source "%val{config}/locations.kak"
 source "%val{config}/flip-boolean.kak"
 source "%val{config}/lsp.kak"
+source "%val{config}/bookmarks.kak"
 # source "%val{config}/reasymotion.kak"
 # source "%val{config}/jump-stack.kak"
 # source "%val{config}/amber.kak"
@@ -96,6 +97,7 @@ map global user f ':enter-user-mode find-actions<ret>'         -docstring 'find 
 map global user b ':enter-user-mode buffer-actions<ret>'       -docstring 'buffer actions'
 map global user B ':enter-user-mode buffer-actions -lock<ret>' -docstring 'buffer actions (Locked)'
 map global user l ':enter-user-mode lsp<ret>'                  -docstring 'lsp mode'
+map global user m ':enter-user-mode bookmarks<ret>'            -docstring 'bookmark mode'
 
 # muscle memories
 map global normal <c-e> ':execute-keys vj<ret>'                  -docstring 'scroll oneline down'
