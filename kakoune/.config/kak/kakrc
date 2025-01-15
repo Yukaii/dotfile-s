@@ -1,6 +1,5 @@
 evaluate-commands %sh{
   kks init
-  cork init
   kak-lsp --kakoune -s $kak_session
   kak-tree-sitter -dks --init $kak_session
   gitlinker init kakoune
@@ -233,6 +232,22 @@ map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>
 map global object h 'c<gt>,<lt><ret>' -docstring "select in the (html) angle brackets"
 map global object o 'c\s,\s<ret>'     -docstring "select inbetween the whitespace"
 
+declare-user-mode mark
+map global user m ': enter-user-mode mark<ret>' -docstring "Enter mark mode"
+
+map global mark l ':bookmark-show-list<ret>'     -docstring "List bookmarks"
+map global mark a ':bookmark-add<ret>'           -docstring "Add bookmark"
+
+map global mark 1 ':bookmark-nav 1<ret>'         -docstring "Go to bookmark"
+map global mark 2 ':bookmark-nav 2<ret>'         -docstring "Go to bookmark"
+map global mark 3 ':bookmark-nav 3<ret>'         -docstring "Go to bookmark"
+map global mark 4 ':bookmark-nav 4<ret>'         -docstring "Go to bookmark"
+map global mark 5 ':bookmark-nav 5<ret>'         -docstring "Go to bookmark"
+map global mark 6 ':bookmark-nav 6<ret>'         -docstring "Go to bookmark"
+map global mark 7 ':bookmark-nav 7<ret>'         -docstring "Go to bookmark"
+map global mark 8 ':bookmark-nav 8<ret>'         -docstring "Go to bookmark"
+map global mark 9 ':bookmark-nav 9<ret>'         -docstring "Go to bookmark"
+
 define-command -hidden wrap-calc -params 4 %{
   evaluate-commands %sh{
     line_content="$kak_selection"
@@ -422,9 +437,15 @@ hook global ModeChange .*:insert:.* %{
 
 
 # Plugins
-cork smarttab "https://github.com/andreyorst/smarttab.kak"
 
-cork konflict "https://github.com/eko234/git-konflict.kak" %{
+source "%val{config}/bundle/kak-bundle/rc/kak-bundle.kak"
+bundle-noload kak-bundle https://codeberg.org/jdugan6240/kak-bundle
+
+
+
+bundle smarttab "https://github.com/andreyorst/smarttab.kak"
+
+bundle konflict "https://github.com/eko234/git-konflict.kak" %{
   declare-user-mode konflict
   map global user k ': enter-user-mode konflict<ret>'         -docstring 'Konflict mode'
   map global konflict s ': konflict-start<ret>'               -docstring 'Konflict start'
@@ -435,7 +456,7 @@ cork konflict "https://github.com/eko234/git-konflict.kak" %{
   map global konflict d ': konflict-use-none<ret>'            -docstring 'Use none'
 }
 
-cork surround "https://github.com/h-youhei/kakoune-surround" %{
+bundle surround "https://github.com/h-youhei/kakoune-surround" %{
   declare-user-mode surround
   map global surround s ':surround<ret>'               -docstring 'surround'
   map global surround c ':change-surround<ret>'        -docstring 'change'
@@ -444,7 +465,7 @@ cork surround "https://github.com/h-youhei/kakoune-surround" %{
   map global user s ':enter-user-mode surround<ret>'   -docstring 'surround mode'
 }
 
-cork git_mode 'https://github.com/jordan-yee/kakoune-git-mode' %{
+bundle git_mode 'https://github.com/jordan-yee/kakoune-git-mode' %{
   # Set structured commit message options here
   set-option global git_mode_use_structured_quick_commit true
   set-option global git_mode_commit_prefixes 'feat::fix::docs::refactor::build::test::style::BREAKING CHANGE::'
@@ -455,7 +476,7 @@ cork git_mode 'https://github.com/jordan-yee/kakoune-git-mode' %{
   map global git-yank 'y' ':gitlinker<ret>'           -docstring 'Copy Permalink'
 }
 
-cork ui 'https://github.com/kkga/ui.kak' %{
+bundle ui 'https://github.com/kkga/ui.kak' %{
   map global user u ': enter-user-mode ui<ret>' -docstring "ui mode"
 
   hook global WinCreate .* %{
@@ -464,15 +485,15 @@ cork ui 'https://github.com/kkga/ui.kak' %{
   }
 }
 
-cork yummy 'https://github.com/Hjagu09/yummy.kak' %{
+bundle yummy 'https://github.com/Hjagu09/yummy.kak' %{
   # require-module yummy_devs_config
   # yummy-enable
 }
 
-cork distraction_free 'https://github.com/TeddyDD/distraction-free.kak' %{
+bundle distraction_free 'https://github.com/TeddyDD/distraction-free.kak' %{
 }
 
-cork harpoon 'https://github.com/raiguard/kak-harpoon' %{
+bundle harpoon 'https://github.com/raiguard/kak-harpoon' %{
   declare-user-mode harpoon
   map global user o ': enter-user-mode harpoon<ret>' -docstring "Enter harpoon mode"
 
@@ -490,53 +511,53 @@ cork harpoon 'https://github.com/raiguard/kak-harpoon' %{
   map global harpoon 9 ':harpoon-nav 9<ret>'        -docstring "go harpoon"
 }
 
-cork live_grep 'https://github.com/raiguard/kak-live-grep' %{
+bundle live_grep 'https://github.com/raiguard/kak-live-grep' %{
   map global find-actions -docstring 'live grep'   '/' ':live-grep<ret>'
 }
-cork grep-write https://github.com/jtrv/grep-write.kak %{
+bundle grep-write https://github.com/jtrv/grep-write.kak %{
   map global user -docstring 'grep write' W ':grep-write<ret>'
   # map global user -docstring 'grup write' U ':grup-write<ret>'
 }
 
-cork replace-mode https://github.com/tomKPZ/replace-mode.kak %{
+bundle replace-mode https://github.com/tomKPZ/replace-mode.kak %{
   map global user r ':enter-user-mode replace<ret>' -docstring 'replace mode'
 }
 
-cork filetree https://github.com/occivink/kakoune-filetree
+bundle filetree https://github.com/occivink/kakoune-filetree
 
-cork sshconfig https://github.com/Yukaii/ssh-config.kak
+bundle sshconfig https://github.com/Yukaii/ssh-config.kak
 
-cork case 'https://gitlab.com/FlyingWombat/case.kak.git/' %{
+bundle case 'https://gitlab.com/FlyingWombat/case.kak.git/' %{
   map global normal ` ': enter-user-mode case<ret>'
 }
 
 # cork vue https://github.com/ABuffSeagull/kakoune-vue
 
-cork kak-jsts https://github.com/schemar/kak-jsts %{
+bundle kak-jsts https://github.com/schemar/kak-jsts %{
   declare-user-mode format
   map global user F ':enter-user-mode format<ret>' -docstring 'Enter format mode'
   map global format p ':format-prettier<ret>'      -docstring 'Format with prettier'
   map global format e ':format-eslint<ret>'        -docstring 'Format with eslint'
 }
 
-cork visual-mode https://gitlab.com/dead10ck/visual-mode.kak.git %{
+bundle visual-mode https://gitlab.com/dead10ck/visual-mode.kak.git %{
   require-module visual-mode
   map global normal <a-v> ': visual-mode v<ret>'
   map global normal <a-s-v> ': visual-line-mode V<ret>'
 }
 
-cork increment https://gitlab.com/Screwtapello/kakoune-inc-dec.git %{
+bundle increment https://gitlab.com/Screwtapello/kakoune-inc-dec.git %{
   map global normal <c-a> ': inc-dec-modify-numbers + %val{count}<ret>' -docstring 'increment'
   map global normal <c-x> ': inc-dec-modify-numbers - %val{count}<ret>' -docstring 'decrement'
 }
 
-cork edit-on-dir https://gitlab.com/fsub/kakoune-edit-or-dir.git/ %{
+bundle edit-on-dir https://gitlab.com/fsub/kakoune-edit-or-dir.git/ %{
   unalias global e edit
   alias global e edit-or-dir
   set-option global edit_or_dir_hidden '-A'
 }
 
-cork save-state https://gitlab.com/Screwtapello/kakoune-state-save.git %{
+bundle save-state https://gitlab.com/Screwtapello/kakoune-state-save.git %{
   hook global KakBegin .* %{
     state-save-reg-load colon
     state-save-reg-load pipe
@@ -553,7 +574,7 @@ cork save-state https://gitlab.com/Screwtapello/kakoune-state-save.git %{
   hook global FocusIn  .* %{ state-save-reg-load dquote }
 }
 
-cork crosshair https://github.com/insipx/kak-crosshairs %{
+bundle crosshair https://github.com/insipx/kak-crosshairs %{
   set-option global highlight_current_line true
   set-face   global crosshairs_line   default,rgb:383838
   set-face   global crosshairs_column default,rgb:383838
@@ -562,6 +583,6 @@ cork crosshair https://github.com/insipx/kak-crosshairs %{
   crosshairs-update
 }
 
-# cork bookmark.kak https://github.com/Aelerinya/bookmarks.kak %{
+# bundle bookmark.kak https://github.com/Aelerinya/bookmarks.kak %{
 #   # hook global WinCreate .* bookmarks-enable
 # }
