@@ -82,6 +82,10 @@ hook -group lsp-filetype-javascript global BufSetOption filetype=(?:javascript|t
     [simple-completion-language-server.settings.environment]
     RUST_LOG = "info,simple-completion-language-server=info"
     LOG_FILE = "/tmp/completion.log"
+
+    # [ast-grep]
+    # root_globs = ["sgconfig.yml"]
+    # args = ["lsp"]
   }
 }
 
