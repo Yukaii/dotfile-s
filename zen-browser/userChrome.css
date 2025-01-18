@@ -13,3 +13,11 @@
   --zen-element-separation: 10px !important;
 }
 
+.tabbrowser-tab {
+  & .tab-background {
+    &::before {
+      display: none;
+    }
+  }
+}
+
