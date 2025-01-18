@@ -456,14 +456,14 @@ bundle konflict "https://github.com/eko234/git-konflict.kak" %{
   map global konflict d ': konflict-use-none<ret>'            -docstring 'Use none'
 }
 
-bundle surround "https://github.com/h-youhei/kakoune-surround" %{
-  declare-user-mode surround
-  map global surround s ':surround<ret>'               -docstring 'surround'
-  map global surround c ':change-surround<ret>'        -docstring 'change'
-  map global surround d ':delete-surround<ret>'        -docstring 'delete'
-  map global surround t ':select-surrounding-tag<ret>' -docstring 'select tag'
-  map global user s ':enter-user-mode surround<ret>'   -docstring 'surround mode'
-}
+# bundle surround "https://github.com/h-youhei/kakoune-surround" %{
+#   declare-user-mode surround
+#   map global surround s ':surround<ret>'               -docstring 'surround'
+#   map global surround c ':change-surround<ret>'        -docstring 'change'
+#   map global surround d ':delete-surround<ret>'        -docstring 'delete'
+#   map global surround t ':select-surrounding-tag<ret>' -docstring 'select tag'
+#   map global user s ':enter-user-mode surround<ret>'   -docstring 'surround mode'
+# }
 
 bundle git_mode 'https://github.com/jordan-yee/kakoune-git-mode' %{
   # Set structured commit message options here
@@ -581,6 +581,10 @@ bundle crosshair https://github.com/insipx/kak-crosshairs %{
 
   crosshairs-change-hooks
   crosshairs-update
+}
+
+bundle Encapsul8  https://github.com/ElectricR/Encapsul8 %{
+  require-module encapsul8-load-defaults
 }
 
 # bundle bookmark.kak https://github.com/Aelerinya/bookmarks.kak %{
