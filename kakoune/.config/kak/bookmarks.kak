@@ -82,14 +82,14 @@ define-command bookmarks-show-list -docstring "Show all bookmarks in the *bookma
 define-command -hidden bookmarks-update-from-list %{
   evaluate-commands -save-regs dquote %{
     try %{
-      execute-keys -draft '%s^\d+:\s*(.+)$<ret>c<c-r>1<ret>'
-      execute-keys -draft '%<a-s>y'
+      # Select all lines starting with digits and colon, then select after the prefix
+      execute-keys -draft -save-regs '' '%<a-s><a-k>^\d+:\s*<ret><a-;>;wl<a-l>y'
       set-option global bookmarks %reg{dquote}
       bookmarks-show-list
-      echo "Updated bookmarks"
     } catch %{
       set-option global bookmarks
     }
+    echo "Updated bookmarks"
   }
 }
 
