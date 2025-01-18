@@ -235,18 +235,18 @@ map global object o 'c\s,\s<ret>'     -docstring "select inbetween the whitespac
 declare-user-mode mark
 map global user m ': enter-user-mode mark<ret>' -docstring "Enter mark mode"
 
-map global mark l ':bookmark-show-list<ret>'     -docstring "List bookmarks"
-map global mark a ':bookmark-add<ret>'           -docstring "Add bookmark"
+map global mark l ':bookmarks-show-list<ret>'     -docstring "List bookmarks"
+map global mark a ':bookmarks-add<ret>'           -docstring "Add bookmark"
 
-map global mark 1 ':bookmark-nav 1<ret>'         -docstring "Go to bookmark"
-map global mark 2 ':bookmark-nav 2<ret>'         -docstring "Go to bookmark"
-map global mark 3 ':bookmark-nav 3<ret>'         -docstring "Go to bookmark"
-map global mark 4 ':bookmark-nav 4<ret>'         -docstring "Go to bookmark"
-map global mark 5 ':bookmark-nav 5<ret>'         -docstring "Go to bookmark"
-map global mark 6 ':bookmark-nav 6<ret>'         -docstring "Go to bookmark"
-map global mark 7 ':bookmark-nav 7<ret>'         -docstring "Go to bookmark"
-map global mark 8 ':bookmark-nav 8<ret>'         -docstring "Go to bookmark"
-map global mark 9 ':bookmark-nav 9<ret>'         -docstring "Go to bookmark"
+map global mark 1 ':bookmarks-nav 1<ret>'         -docstring "Go to bookmark"
+map global mark 2 ':bookmarks-nav 2<ret>'         -docstring "Go to bookmark"
+map global mark 3 ':bookmarks-nav 3<ret>'         -docstring "Go to bookmark"
+map global mark 4 ':bookmarks-nav 4<ret>'         -docstring "Go to bookmark"
+map global mark 5 ':bookmarks-nav 5<ret>'         -docstring "Go to bookmark"
+map global mark 6 ':bookmarks-nav 6<ret>'         -docstring "Go to bookmark"
+map global mark 7 ':bookmarks-nav 7<ret>'         -docstring "Go to bookmark"
+map global mark 8 ':bookmarks-nav 8<ret>'         -docstring "Go to bookmark"
+map global mark 9 ':bookmarks-nav 9<ret>'         -docstring "Go to bookmark"
 
 define-command -hidden wrap-calc -params 4 %{
   evaluate-commands %sh{
