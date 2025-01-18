@@ -54,12 +54,23 @@ define-command bookmarks-nav -params 1 -docstring "bookmarks-nav <index>: Naviga
 define-command bookmarks-show-list -docstring "Show all bookmarks in the *bookmarks* buffer" %{
   evaluate-commands -save-regs dquote %{
     try %{
-      set-register dquote %opt{bookmarks}
       edit -scratch *bookmarks*
-      execute-keys -draft '%"_d<a-P>a<ret><esc>'
-      # Format each line with index
-      execute-keys -draft '%s^(.+)$<ret>c<c-r>#: <c-r>.<ret>'
-      execute-keys gg
+      # Clear buffer first
+      execute-keys '%d'
+      # Insert bookmarks
+      evaluate-commands %sh{
+        eval set -- "$kak_quoted_opt_bookmarks"
+        index=1
+        commands=""
+        while [ $# -gt 0 ]; do
+          printf "execute-keys -draft 'i%d: %s<ret>'\n" "$index" "$1"
+          index=$((index + 1))
+          shift
+        done
+      }
+      # Remove the last newline if buffer is not empty
+      try %{ execute-keys -draft 'ged' }
+      execute-keys 'gg'
     } catch %{
       delete-buffer *bookmarks*
       fail "No bookmarks are set"
