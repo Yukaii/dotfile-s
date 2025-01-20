@@ -15,7 +15,7 @@ FZF_DEFAULT_COMMAND="git ls-files --full-name $(git rev-parse --show-toplevel)" 
   fzf --highlight-line \
     --multi \
     --height 100% \
-    --prompt 'files> ' \
+    --prompt 'git-files> ' \
     --preview "$preview_cmd {}" \
     --history="$history_file" \
     --header="[ctrl-l] send to files buffer" \
