@@ -15,3 +15,6 @@ eval "$(zoxide init zsh)"
 export PATH="$PATH:$HOME/.bin"
 
 source "$HOME/.config/broot/launcher/bash/br"
+
+# Added by Windsurf
+export PATH="/Users/yukai/.codeium/windsurf/bin:$PATH"
