@@ -4,9 +4,6 @@
 [submodule "alacritty/.config/alacritty/themes"]
 	path = alacritty/.config/alacritty/themes
 	url = https://github.com/alacritty/alacritty-theme
-[submodule "kakoune/.config/kak/kak-bundle"]
-	path = kakoune/.config/kak/bundle/kak-bundle
-	url = https://github.com/jdugan6240/kak-bundle
 [submodule "bin/.bin/moreutils"]
 	path = bin/.bin/moreutils
 	url = git://git.joeyh.name/moreutils
@@ -16,3 +13,6 @@
 [submodule "ghostty/.config/ghostty/themes/noctis-themes"]
 	path = ghostty/.config/ghostty/themes/noctis-themes
 	url = https://github.com/eastsun5566/ghostty-noctis-themes.git
+[submodule "kakoune/.config/kak/bundle/kak-bundle"]
+	path = kakoune/.config/kak/bundle/kak-bundle
+	url = https://github.com/jdugan6240/kak-bundle

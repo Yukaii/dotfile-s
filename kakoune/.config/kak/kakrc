@@ -353,7 +353,7 @@ hook global ModeChange .*:insert:.* %{
 # Plugins
 
 source "%val{config}/bundle/kak-bundle/rc/kak-bundle.kak"
-bundle-noload kak-bundle https://codeberg.org/jdugan6240/kak-bundle
+bundle-noload kak-bundle https://github.com/jdugan6240/kak-bundle
 
 
 bundle smarttab "https://github.com/andreyorst/smarttab.kak"
