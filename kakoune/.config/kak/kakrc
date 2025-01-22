@@ -40,7 +40,7 @@ set global tabstop 2
 
 set-option global ui_options terminal_assistant=none
 set-option global scrolloff 5,5
-set-option global startup_info_version 20230805
+set-option global startup_info_version 20240518
 
 set-option global autoreload yes
 
@@ -50,7 +50,7 @@ add-highlighter global/number-lines number-lines -hlcursor -relative -separator 
 add-highlighter global/show-whitespaces show-whitespaces -indent '▏' -lf ' ' -spc ' ' -nbsp ' ' -tab ' ' -tabpad ' '
 add-highlighter global/ show-matching
 add-highlighter global/ wrap -word
-# add-highlighter global/todo-highlighter regex //\h*(TODO:)[^\n]* 0:cyan 1:yellow,red
+add-highlighter global/todo-highlighter regex //\h*(TODO:)[^\n]* 0:cyan 1:yellow,red
 
 add-highlighter global/ regex \b(TODO|FIXME|NOTE)\b 0:default+rb
 
@@ -61,23 +61,28 @@ hook global WinDisplay .*              show-trailing-whitespaces
 hook global ModeChange 'insert:normal' show-trailing-whitespaces
 hook global ModeChange 'normal:insert' hide-trailing-whitespaces
 
-# comment
-map global user -docstring 'recent files'                '<space>' ':kks-connect terminal-popup kks-mru<ret>'
-map global user -docstring 'create buffer'               n         ':e -scratch<ret>'
-map global user -docstring 'delete buffer'               c         ':db<ret>'
-map global user -docstring 'quit'                        q         ':q<ret>'
-map global user -docstring 'paste from clipboard'        P         '!pbpaste<ret>'
-map global user -docstring 'paste before from clipboard' p         '<a-!>pbpaste<ret>'
-map global user -docstring 'replace selection with clipaboard content' R '|pbpaste<ret>'
-map global user -docstring 'comment line'                /         ':comment-line<ret>'
-map global user -docstring 'block comment selection'     ?         ':comment-block<ret>'
-map global user -docstring 'explorer'                    e         ':open-broot<ret>'
-map global user -docstring 'edit config'                 ,         ':edit-config<ret>'
-map global user -docstring 'debug buffer'                d         ':buffer *debug*<ret>'
-map global user -docstring 'lsp hover'                   h         ':lsp-hover<ret>'
-map global user -docstring 'lsp hover buffer'            H         ':lsp-hover-buffer<ret>'
-map global user -docstring 'trim trailing whitesapce'    S         ':trim-trailing-whitespaces<ret>'
-map global user -docstring 'write file'                  w         ':w<ret>'
+# User mode mappings
+map global user '<space>' ':kks-connect terminal-popup kks-mru<ret>'    -docstring 'recent files'
+map global user n         ':e -scratch<ret>'                            -docstring 'create buffer'
+map global user c         ':db<ret>'                                    -docstring 'delete buffer'
+map global user q         ':q<ret>'                                     -docstring 'quit'
+map global user P         '!pbpaste<ret>'                               -docstring 'paste from clipboard'
+map global user p         '<a-!>pbpaste<ret>'                           -docstring 'paste before from clipboard'
+map global user R         '|pbpaste<ret>'                               -docstring 'replace selection with clipaboard'
+map global user /         ':comment-line<ret>'                          -docstring 'comment line'
+map global user ?         ':comment-block<ret>'                         -docstring 'block comment selection'
+map global user e         ':open-broot<ret>'                            -docstring 'explorer'
+map global user ,         ':edit-config<ret>'                           -docstring 'edit config'
+map global user d         ':buffer *debug*<ret>'                        -docstring 'debug buffer'
+map global user h         ':lsp-hover<ret>'                             -docstring 'lsp hover'
+map global user H         ':lsp-hover-buffer<ret>'                      -docstring 'lsp hover buffer'
+map global user S         ':trim-trailing-whitespaces<ret>'             -docstring 'trim trailing whitesapce'
+map global user w         ':w<ret>'                                     -docstring 'write file'
+map global user t         ':enter-user-mode terminal-actions<ret>'      -docstring 'terminal actions'
+map global user f         ':enter-user-mode find-actions<ret>'          -docstring 'find actions'
+map global user b         ':enter-user-mode buffer-actions<ret>'        -docstring 'buffer actions'
+map global user B         ':enter-user-mode buffer-actions -lock<ret>'  -docstring 'buffer actions (Locked)'
+map global user l         ':enter-user-mode lsp<ret>'                   -docstring 'lsp mode'
 
 define-command trim-trailing-whitespaces -docstring 'trim trailing whitespaces' %{
   try %{
@@ -89,24 +94,19 @@ define-command edit-config -docstring 'edit config' %{
   edit "%val{config}/kakrc"
 }
 
-# user mode shortcuts
-map global user t ':enter-user-mode terminal-actions<ret>'     -docstring 'terminal actions'
-map global user f ':enter-user-mode find-actions<ret>'         -docstring 'find actions'
-map global user b ':enter-user-mode buffer-actions<ret>'       -docstring 'buffer actions'
-map global user B ':enter-user-mode buffer-actions -lock<ret>' -docstring 'buffer actions (Locked)'
-map global user l ':enter-user-mode lsp<ret>'                  -docstring 'lsp mode'
+
+# Normal mode commands
 
 # muscle memories
 map global normal <c-e> ':execute-keys vj<ret>'                  -docstring 'scroll oneline down'
 map global normal <c-y> ':execute-keys vk<ret>'                  -docstring 'scroll oneline down'
 map global normal '<c-w>' ':enter-user-mode window-actions<ret>' -docstring 'window actions'
-
-# Normal mode commands
 map global normal X ':execute-keys xH<ret>' -docstring 'Select till line end'
 # Move line up/down
 map global normal '<a-up>' 'x"aZy<a-;>kPZ"azdz'
 map global normal '<a-down>' 'xdp'
 
+# Terminal actions
 declare-user-mode terminal-actions
 
 define-command lazygit -hidden -docstring 'Launch lazygit' %{ nop %sh{
@@ -130,11 +130,11 @@ define-command floating-terminal -hidden -docstring 'Launch floating terminal' %
 }}
 
 map global terminal-actions 'l' ':lazygit<ret>'           -docstring 'lazygit'
-map global terminal-actions 'j' ':lazyjj<ret>'           -docstring 'lazyjj'
+map global terminal-actions 'j' ':lazyjj<ret>'            -docstring 'lazyjj'
 map global terminal-actions 'b' ':bottom-terminal<ret>'   -docstring 'bottom terminal'
 map global terminal-actions 'B' ':open_blame<ret>'        -docstring 'Git Blame'
 map global terminal-actions 'f' ':floating-terminal<ret>' -docstring 'Floating terminal'
-map global terminal-actions 'r' ':serpl<ret>' -docstring 'serpl'
+map global terminal-actions 'r' ':serpl<ret>'             -docstring 'serpl'
 
 define-command -hidden open_blame %{
   terminal-vertical tig blame %val{buffile} "+%val{cursor_line}"
