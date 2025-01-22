@@ -26,7 +26,6 @@ source "%val{config}/lsp.kak"
 # source "%val{config}/reasymotion.kak"
 # source "%val{config}/jump-stack.kak"
 # source "%val{config}/amber.kak"
-# source "%val{config}/bundle/kak-bundle/rc/kak-bundle.kak"
 
 colorscheme kanagawa
 # colorscheme ayu-mirage
@@ -100,11 +99,12 @@ define-command edit-config -docstring 'edit config' %{
 # muscle memories
 map global normal <c-e> ':execute-keys vj<ret>'                  -docstring 'scroll oneline down'
 map global normal <c-y> ':execute-keys vk<ret>'                  -docstring 'scroll oneline down'
-map global normal '<c-w>' ':enter-user-mode window-actions<ret>' -docstring 'window actions'
-map global normal X ':execute-keys xH<ret>' -docstring 'Select till line end'
+map global normal <c-w> ':enter-user-mode window-actions<ret>'   -docstring 'window actions'
+map global normal X     ':execute-keys xH<ret>'                  -docstring 'Select till line end'
+
 # Move line up/down
-map global normal '<a-up>' 'x"aZy<a-;>kPZ"azdz'
-map global normal '<a-down>' 'xdp'
+map global normal <a-up>   'x"aZy<a-;>kPZ"azdz'
+map global normal <a-down> 'xdp'
 
 # Terminal actions
 declare-user-mode terminal-actions
@@ -230,59 +230,6 @@ map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>
 map global object h 'c<gt>,<lt><ret>' -docstring "select in the (html) angle brackets"
 map global object o 'c\s,\s<ret>'     -docstring "select inbetween the whitespace"
 
-define-command -hidden wrap-calc -params 4 %{
-  evaluate-commands %sh{
-    line_content="$kak_selection"
-    new_pos=$(echo "$line_content" | wrap-calculator \
-      --width="$1" \
-      --pos="$2" \
-      --move="$4" \
-      --count=1 \
-      --word \
-      --indent)
-
-    # Restore original selection first
-    printf "execute-keys ':select %s<ret>';" "$3"
-
-    # Move cursor to new position
-    line_number=$(echo "$3" | cut -d',' -f1 | cut -d'.' -f1)
-    printf "execute-keys ':select %s.%d,%s.%d<ret>';" "$line_number" "$new_pos" "$line_number" "$new_pos"
-
-    # Debug info
-    # printf 'info -title wrap-calc %%{width: %d, pos: %d, new_pos: %d, line_number: %d, sel: %s}' \
-      # "$1" "$2" "$new_pos" "$line_number" "$3"
-    # printf 'info -title wrap-calc %%{width: %d, pos: %d, new_pos: %d, line_number: %d, sel: %s\nline: %%{%s}}' \
-    #   "$1" "$2" "$new_pos" "$line_number" "$3" "$line_content"
-  }
-}
-
-# Wrap line movement down
-define-command -hidden unset-move -params 1 %{
-  evaluate-commands %sh{
-    # Get total line count to calculate gutter width
-    gutter_width=$(echo "$kak_buf_line_count" | wc -c)
-
-    # Add 2 for padding and git status
-    total_offset=$((gutter_width + 1))
-
-    # Calculate effective window width
-    window_width=$((kak_window_width - total_offset))
-
-    # Store current selection
-    saved_selection="$kak_selection_desc"
-    cursor_char=$(echo "$saved_selection" | cut -d',' -f1 | cut -d'.' -f2)
-
-    printf "execute-keys '<esc>x'; wrap-calc %%{%d} %%{%d} %%{%s} $1" \
-      "$window_width" "$cursor_char" "$saved_selection"
-  }
-}
-
-define-command -hidden unset-j %{ unset-move "down" }
-define-command -hidden unset-k %{ unset-move "up" }
-
-map global user J ':unset-j<ret>' -docstring 'Line move down'
-map global user K ':unset-k<ret>' -docstring 'Line move up'
-
 define-command glow -params .. -file-completion -docstring %{
   glow [<arguments>]: glow utility wrapper
   All optional arguments are forwarded to the glow utility
@@ -301,22 +248,6 @@ define-command glow -params .. -file-completion -docstring %{
     else
       echo "terminal-horizontal glow %arg{@}"
     fi
-  }
-}
-
-define-command grup-write -docstring "
-  grup-write: pipes the current grep-buffer to grug -w and prints the results
-" %{
-  declare-option -hidden str grug_buf
-  evaluate-commands -draft %{
-    evaluate-commands %sh{
-      echo "set-option buffer grug_buf '$(mktemp /tmp/grug_buf.XXX)'"
-    }
-    write -sync -force %opt{grug_buf}
-    evaluate-commands %sh{
-      cat "$kak_opt_grug_buf" | grug -w |
-        xargs -I{} echo "echo -debug 'grug: {}'; echo -markup {Information} 'grug: {}';"
-    }
   }
 }
 
@@ -380,6 +311,7 @@ hook global BufOpenFile .* %{
   }
 }
 
+# hook for kks mru script
 hook global WinDisplay [^*].* %{
   evaluate-commands nop %sh{
     pwd="${kak_client_env_PWD}"
@@ -424,7 +356,6 @@ source "%val{config}/bundle/kak-bundle/rc/kak-bundle.kak"
 bundle-noload kak-bundle https://codeberg.org/jdugan6240/kak-bundle
 
 
-
 bundle smarttab "https://github.com/andreyorst/smarttab.kak"
 
 bundle konflict "https://github.com/eko234/git-konflict.kak" %{
@@ -437,15 +368,6 @@ bundle konflict "https://github.com/eko234/git-konflict.kak" %{
   map global konflict K ': konflict-use-yours-then-mine<ret>' -docstring 'Use yours then mine'
   map global konflict d ': konflict-use-none<ret>'            -docstring 'Use none'
 }
-
-# bundle surround "https://github.com/h-youhei/kakoune-surround" %{
-#   declare-user-mode surround
-#   map global surround s ':surround<ret>'               -docstring 'surround'
-#   map global surround c ':change-surround<ret>'        -docstring 'change'
-#   map global surround d ':delete-surround<ret>'        -docstring 'delete'
-#   map global surround t ':select-surrounding-tag<ret>' -docstring 'select tag'
-#   map global user s ':enter-user-mode surround<ret>'   -docstring 'surround mode'
-# }
 
 bundle git_mode 'https://github.com/jordan-yee/kakoune-git-mode' %{
   # Set structured commit message options here
@@ -465,14 +387,6 @@ bundle ui 'https://github.com/kkga/ui.kak' %{
     ui-matching-toggle
     ui-search-toggle
   }
-}
-
-bundle yummy 'https://github.com/Hjagu09/yummy.kak' %{
-  # require-module yummy_devs_config
-  # yummy-enable
-}
-
-bundle distraction_free 'https://github.com/TeddyDD/distraction-free.kak' %{
 }
 
 bundle harpoon 'https://github.com/raiguard/kak-harpoon' %{
@@ -496,9 +410,9 @@ bundle harpoon 'https://github.com/raiguard/kak-harpoon' %{
 bundle live_grep 'https://github.com/raiguard/kak-live-grep' %{
   map global find-actions -docstring 'live grep'   '/' ':live-grep<ret>'
 }
-bundle grep-write https://github.com/jtrv/grep-write.kak %{
+
+bundle grep-write 'https://github.com/jtrv/grep-write.kak' %{
   map global user -docstring 'grep write' W ':grep-write<ret>'
-  # map global user -docstring 'grup write' U ':grup-write<ret>'
 }
 
 bundle replace-mode https://github.com/tomKPZ/replace-mode.kak %{
@@ -520,12 +434,6 @@ bundle kak-jsts https://github.com/schemar/kak-jsts %{
   map global user F ':enter-user-mode format<ret>' -docstring 'Enter format mode'
   map global format p ':format-prettier<ret>'      -docstring 'Format with prettier'
   map global format e ':format-eslint<ret>'        -docstring 'Format with eslint'
-}
-
-bundle visual-mode https://gitlab.com/dead10ck/visual-mode.kak.git %{
-  require-module visual-mode
-  map global normal <a-v> ': visual-mode v<ret>'
-  map global normal <a-s-v> ': visual-line-mode V<ret>'
 }
 
 bundle increment https://gitlab.com/Screwtapello/kakoune-inc-dec.git %{
@@ -598,6 +506,7 @@ bundle bookmarks https://github.com/Yukaii/bookmarks.kak %{
   map global mark p ':bookmarks-nav 20<ret>'               -docstring "Go to bookmark"
 }
 
-# bundle bookmark.kak https://github.com/Aelerinya/bookmarks.kak %{
-#   # hook global WinCreate .* bookmarks-enable
-# }
+bundle wrap-calculator https://github.com/Yukaii/wrap-calculator.kak %{
+  map global user J ':unset-j<ret>' -docstring 'Line move down'
+  map global user K ':unset-k<ret>' -docstring 'Line move up'
+%}
