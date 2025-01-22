@@ -18,7 +18,7 @@
   "buffer_font_size": 15,
   "buffer_font_family": "JetBrains Mono",
   "theme": {
-    "dark": "Github Dark",
+    "dark": "Github Dark Dimmed",
     "mode": "dark",
     "light": "Rosé Pine Dawn"
   },
