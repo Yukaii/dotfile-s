@@ -352,7 +352,43 @@ Enter a command to run on the current selection: "
       --preview-window right:82:noborder"$hidepreview" \
       --preview "$preview_panel" \
       --bind '~:execute(show_message "current_line=\"{}\" toggled=\"$(cat {+f})\" \"PWD=$PWD\"")' \
-      --bind '?:execute(show_message "HELP MENU")' \
+--bind '?:execute(show_message "File Browser Help Menu
+
+Navigation:
+  ↑/↓           Navigate through items
+  ←/→           Go to parent/enter directory
+  PgUp/PgDn     Move half page up/down
+  Shift-↑/↓     Move half page up/down
+  [/]           Scroll preview up/down
+  Shift-←/→     Scroll preview up/down
+
+View Controls:
+  ctrl-p        Toggle preview panel
+  ctrl-h        Toggle hidden files
+  ctrl-l        Toggle long view format
+  alt-/,ctrl-/  Show current directory
+
+Selection:
+  Space         Toggle selection
+  ctrl-a        Select all items
+  Esc           Clear selection
+  Tab           Select/complete item
+  Enter         Accept/open selection
+
+Special Commands:
+  !             Toggle shell prompt mode
+  alt-c         Quick directory jump
+  ctrl-o        Accept current selection
+  ctrl-q        Quit file browser
+  /             Accept and execute
+  ~             Show current line info
+
+Shell Prompt Mode:
+  Tab           Auto-complete command
+  ↑/↓           Navigate through commands
+  Shift-↑/↓     Navigate command history
+  ←/→           Move cursor in command
+  Enter         Execute command")' \
       --bind 'alt-/:execute(show_message "PWD=$PWD")' \
       --bind 'ctrl-/:execute(show_message "PWD=$PWD")' \
       --bind 'ctrl-a:select-all' \
@@ -389,7 +425,7 @@ Enter a command to run on the current selection: "
             && touch /tmp/fzf/showhidden \
             || rm /tmp/fzf/showhidden \
         )+top+accept' \
-      --bind 'ctrl-q:clear-selection+execute(echo QUIT)+abort' \
+      --bind 'ctrl-q:abort+execute-silent(echo QUIT > /tmp/fzf/quit)' \
       --bind 'esc:clear-selection' \
       $shellprompt_options \
       --bind "enter:$enter_binding" \
@@ -400,7 +436,10 @@ Enter a command to run on the current selection: "
   # phew .. now have a newline separated list of more or more things
   # in $selection, so lets do something with it...
 
-  if [ -d "$selected" ];then
+  if [ -f /tmp/fzf/quit ]; then
+    rm -f /tmp/fzf/quit
+    break
+  elif [ -d "$selected" ];then
       builtin cd "$selected"
   elif [ "$selected" = "QUIT" ];then
     break
