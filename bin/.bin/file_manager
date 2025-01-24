@@ -158,8 +158,61 @@ function get_column_to_search {
   echo -n $nth
 }
 
+# Function to create the preview script
+create_preview_script() {
+    local preview_script
+    preview_script=$(mktemp)
+
+    cat > "$preview_script" << 'EOF'
+#!/usr/bin/env bash
+VAL="$1"
+PWD="$2"
+
+if test -f "$VAL"; then
+    if file -biz "$PWD/$VAL" | grep ^text &>/dev/null; then
+        bat --color=always --decorations=never "$PWD/$VAL"
+    elif file -biz "$PWD/$VAL" | grep ^image &>/dev/null; then
+        w3mimg.sh "$PWD/$VAL"
+    elif file -biz "$PWD/$VAL" | grep "/pdf" &>/dev/null; then
+        zathura "$PWD/$VAL"
+    elif file -biz "$PWD/$VAL" | grep -E "^video|audio" &>/dev/null; then
+        mpv "$PWD/$VAL"
+    elif file -biz "$PWD/$VAL" | grep "x-tar" &>/dev/null; then
+        tar -tvf "$PWD/$VAL"
+    fi
+elif [ "$VAL" != "$PWD" ]; then
+    eza \
+        $showhidden \
+        --oneline \
+        --git-ignore \
+        --git \
+        --color=always \
+        --icons \
+        --group-directories-first \
+        --classify=auto \
+        --level 1 \
+        "$VAL" 2>/dev/null
+fi
+EOF
+    chmod +x "$preview_script"
+    echo "$preview_script"
+}
+
+# Function to clean up the preview script
+cleanup_preview_script() {
+    local preview_script="$1"
+    if [ -f "$preview_script" ]; then
+        rm -f "$preview_script"
+    fi
+}
+
 # ------- end of functions ---------
 
+# Create the preview script and store its path
+PREVIEW_SCRIPT=$(create_preview_script)
+
+# Set up cleanup trap
+trap 'cleanup_preview_script "$PREVIEW_SCRIPT"' EXIT
 
 # disable the "shellprompt" mode, always load in
 # "file manager" mode first
@@ -196,35 +249,7 @@ while :; do
   echo "$@" | grep -qE '\-fs |\-fs$' && fullscreen='--no-height'
   set_remembered_query_or_not
   # draw preview panel
-preview_panel='VAL={2}; [ -f {8} -o -d {8} ] && VAL={8}; test -f "$VAL" && {
-    file -biz "$PWD/$VAL" | grep ^text &>/dev/null && {
-        echo "$PWD/$VAL" | xargs bat --color=always --decorations=never;
-    }
-    file -biz "$PWD/$VAL" | grep ^image &>/dev/null && {
-        w3mimg.sh "$PWD/$VAL"
-    }
-    file -biz "$PWD/$VAL" | grep "/pdf" &>/dev/null && {
-        zathura "$PWD/$VAL"
-    }
-    file -biz "$PWD/$VAL" | grep -E "^video|audio" &>/dev/null && {
-        mpv "$PWD/$VAL"
-    }
-    file -biz "$PWD/$VAL" | grep "x-tar" &>/dev/null && {
-        tar -tvf "$PWD/$VAL"
-    }
-} || {
-    [ "$VAL" != "$PWD" ] && eza \
-        $showhidden \
-        --oneline \
-        --git-ignore \
-        --git \
-        --color=always \
-        --icons \
-        --group-directories-first \
-        --classify=auto \
-        --level 1 \
-        "$VAL" 2>/dev/null
-}'
+  preview_panel="$PREVIEW_SCRIPT {2} $PWD"
 
   # draw shellprompt header text
   shellprompt_header_text="

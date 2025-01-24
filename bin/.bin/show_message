@@ -1,13 +1,15 @@
 #! /usr/bin/env bash
 
 show_message() {
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        osascript -e "display dialog \"$1\" buttons {\"OK\"} default button \"OK\""
-    elif command -v zenity >/dev/null 2>&1; then
-        zenity --info --text="$1"
-    elif command -v xmessage >/dev/null 2>&1; then
-        xmessage "$1"
-    else
-        echo "$1"
-    fi
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    osascript -e "display dialog \"$1\" buttons {\"OK\"} default button \"OK\""
+  elif command -v zenity >/dev/null 2>&1; then
+    zenity --info --text="$1"
+  elif command -v xmessage >/dev/null 2>&1; then
+    xmessage "$1"
+  else
+    echo "$1"
+  fi
 }
+
+show_message
