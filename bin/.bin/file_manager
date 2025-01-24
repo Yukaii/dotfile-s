@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# a simple terminal based file browser, using fzf and exa.
+# a simple terminal based file browser, using fzf and eza.
 #
 # Browse through folders and open files in $EDITOR.. This file browser can be
 # loaded using the `Alt-i` key binding (see ~/.bash/keybindings.bash)
@@ -34,25 +34,25 @@ function print_filemanager_header {
   [ "$PWD" = "/" ] && echo "/" || echo " .."
 }
 
-# get the "main" list of dirs, using exa,
+# get the "main" list of dirs, using eza,
 # passed to fzf in "filemanager" mode
 function list_dirs {
-  exa \
+  eza \
     $showhidden \
     $longfilemanager \
     --icons \
-    --classify \
+    --classify=auto \
     --git \
     --git-ignore \
     --ignore-glob '.git|.cache|buffers' \
     --group-directories-first \
-    --colour=always \
+    --color=always \
     --level 1 "${1:-$PWD}" | sed "s/\*$//g"
 }
 
 # Alt-C triggers a new fzf window, uses this list, gets
 # lots of dirs, 8 levels deep, using fd, or 2 levels
-# deep using exa
+# deep using eza
 function list_dirs_for_fzcd {
   local dir_list=""
   if [ "$(which fd)" != "" ];then
@@ -61,7 +61,7 @@ function list_dirs_for_fzcd {
       --hidden --exclude "__pycache__*" --exclude "*.default*" \
       --exclude ".git/*" --exclude ".mednafen/b*" --exclude "*OpenWith*")
   else
-    dir_list=$(exa \
+    dir_list=$(eza \
       -a --git-ignore \
       --ignore-glob '*mednafen*|*.cache*|*lock*|*.git*|*OpenWith*|*__pycache__*' \
       --oneline -D -R --level=2 \
@@ -196,7 +196,7 @@ while :; do
   echo "$@" | grep -qE '\-fs |\-fs$' && fullscreen='--no-height'
   set_remembered_query_or_not
   # draw preview panel
-  preview_panel='VAL={2}; [ -f {8} -o -d {8} ] && VAL={8}; test -f "$VAL" && {
+preview_panel='VAL={2}; [ -f {8} -o -d {8} ] && VAL={8}; test -f "$VAL" && {
     file -biz "$PWD/$VAL" | grep ^text &>/dev/null && {
         echo "$PWD/$VAL" | xargs bat --color=always --decorations=never;
     }
@@ -213,15 +213,15 @@ while :; do
         tar -tvf "$PWD/$VAL"
     }
 } || {
-    [ "$VAL" != "$PWD" ] && exa \
+    [ "$VAL" != "$PWD" ] && eza \
         $showhidden \
         --oneline \
         --git-ignore \
         --git \
-        --colour=always \
+        --color=always \
         --icons \
         --group-directories-first \
-        --classify \
+        --classify=auto \
         --level 1 \
         "$VAL" 2>/dev/null
 }'
