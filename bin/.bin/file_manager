@@ -196,39 +196,35 @@ while :; do
   echo "$@" | grep -qE '\-fs |\-fs$' && fullscreen='--no-height'
   set_remembered_query_or_not
   # draw preview panel
-  preview_panel="VAL={2}; [ -f {8} -o -d {8} ] && VAL={8}; test -f \$VAL && \
-  {
-    file -biz \$PWD/\$VAL | grep ^text &>/dev/null && {
-      echo \$PWD/\$VAL | xargs bat --color=always --decorations=never;
+  preview_panel='VAL={2}; [ -f {8} -o -d {8} ] && VAL={8}; test -f "$VAL" && {
+    file -biz "$PWD/$VAL" | grep ^text &>/dev/null && {
+        echo "$PWD/$VAL" | xargs bat --color=always --decorations=never;
     }
-    file -biz \$PWD/\$VAL | grep ^image &>/dev/null && {
-      w3mimg.sh \$PWD/\$VAL
+    file -biz "$PWD/$VAL" | grep ^image &>/dev/null && {
+        w3mimg.sh "$PWD/$VAL"
     }
-    file -biz \$PWD/\$VAL | grep '/pdf' &>/dev/null && {
-      zathura \$PWD/\$VAL
+    file -biz "$PWD/$VAL" | grep "/pdf" &>/dev/null && {
+        zathura "$PWD/$VAL"
     }
-    file -biz \$PWD/\$VAL | grep -E '^video|audio' &>/dev/null && {
-      mpv \$PWD/\$VAL
+    file -biz "$PWD/$VAL" | grep -E "^video|audio" &>/dev/null && {
+        mpv "$PWD/$VAL"
     }
-    file -biz \$PWD/\$VAL | grep 'x-tar' &>/dev/null && {
-      tar -tvf \$PWD/\$VAL
+    file -biz "$PWD/$VAL" | grep "x-tar" &>/dev/null && {
+        tar -tvf "$PWD/$VAL"
     }
-  }  \
-  || \
-  { \
-    [ \$VAL != \$PWD ] && exa \
-      $showhidden \
-      --oneline \
-      --git-ignore \
-      --git \
-      --colour=always \
-      --icons \
-      --group-directories-first \
-      --classify \
-      --level 1 \
-      \$VAL 2>/dev/null
-  }
-  "
+} || {
+    [ "$VAL" != "$PWD" ] && exa \
+        $showhidden \
+        --oneline \
+        --git-ignore \
+        --git \
+        --colour=always \
+        --icons \
+        --group-directories-first \
+        --classify \
+        --level 1 \
+        "$VAL" 2>/dev/null
+}'
 
   # draw shellprompt header text
   shellprompt_header_text="
@@ -330,10 +326,10 @@ Enter a command to run on the current selection: "
       --prompt="$prompt_text" \
       --preview-window right:82:noborder"$hidepreview" \
       --preview "$preview_panel" \
-      --bind '~:execute(xmessage current_line="\"{}\" toggled=\"$(cat {+f})\" \"PWD=$PWD\"" ### <-- replace)' \
-      --bind '?:execute(xmessage "HELP MENU")' \
-      --bind 'alt-/:execute(xmessage "PWD=$PWD")' \
-      --bind 'ctrl-/:execute(xmessage "PWD=$PWD")' \
+      --bind '~:execute(show_message "current_line=\"{}\" toggled=\"$(cat {+f})\" \"PWD=$PWD\"")' \
+      --bind '?:execute(show_message "HELP MENU")' \
+      --bind 'alt-/:execute(show_message "PWD=$PWD")' \
+      --bind 'ctrl-/:execute(show_message "PWD=$PWD")' \
       --bind 'ctrl-a:select-all' \
       --bind 'change:top' \
       --bind 'pgup:half-page-up' \
