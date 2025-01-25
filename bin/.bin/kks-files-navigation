@@ -10,8 +10,8 @@
 # - eza (https://github.com/eza-community/eza)
 
 preview_cmd="bat --color=always --line-range=:500"
-folder_preview_cmd="eza --icons --oneline --group-directories-first"
-history_file="$HOME/.cache/kks-files-history"
+folder_preview_cmd="eza --icons --oneline --group-directories-first --all"
+history_file="$HOME/.cache/kks-files-navigation-history"
 start_dir="$(pwd)"  # Remember the starting directory
 current_dir="${1:-.}"  # Use first argument as starting directory, or current directory if not provided
 
@@ -19,9 +19,6 @@ current_dir="${1:-.}"  # Use first argument as starting directory, or current di
 current_dir="$(realpath "$current_dir")"
 
 [ -f "$history_file" ] || touch "$history_file"
-
-# Initial state: show hidden files
-show_hidden=1
 
 # Function to get relative path from base to target
 get_relative_path() {
@@ -96,29 +93,15 @@ while true; do
   # Change to current directory for relative operations
   cd "$current_dir" || exit 1
 
-  # Set the commands based on hidden files state
-  if [ "$show_hidden" -eq 1 ]; then
-    fd_cmd="fd --hidden --no-ignore --type d --max-depth 1 . --strip-cwd-prefix"
-    rg_cmd="rg --hidden --no-ignore -l '' . --max-depth 1"
-    folder_preview_current="$folder_preview_cmd --all"
-    hidden_status="hidden:on"
-  else
-    fd_cmd="fd --type d --max-depth 1 . --strip-cwd-prefix"
-    rg_cmd="rg -l '' . --max-depth 1"
-    folder_preview_current="$folder_preview_cmd"
-    hidden_status="hidden:off"
-  fi
-
   # Generate the file/folder list
-  file_list=$(printf "..\n"; (eval "$fd_cmd" | sed 's|^\./||'; eval "$rg_cmd" | sed 's|^\./||') | sort)
+  file_list=$(printf "..\n"; (fd --hidden --no-ignore --type d --max-depth 1 . | sed 's|^\./||'; rg --hidden --no-ignore -l '' . --max-depth 1 | sed 's|^\./||') | sort)
 
   selected=$(echo "$file_list" | \
     fzf --height 100% --highlight-line --prompt "files ($display_path)> " \
-      --preview "if [ -d {} ]; then $folder_preview_current {}; else $preview_cmd {}; fi" \
+      --preview "if [ -d {} ]; then $folder_preview_cmd {}; else $preview_cmd {}; fi" \
       --history="$history_file" \
-      --header="[ctrl-l] send files to grep buffer | [enter] open file/enter directory | [ctrl-h] toggle hidden ($hidden_status)" \
-      --bind "ctrl-l:execute($rg_cmd | sed 's|^\./||' | fzf --filter={q} | sed 's|$|:1:1:|' | kks-pipe-to-grep-buffer)+abort" \
-      --bind "ctrl-h:reload(printf '..\n'; show_hidden=\$(( 1 - show_hidden )); if [ \$show_hidden -eq 1 ]; then $fd_cmd | sed 's|^\./||'; $rg_cmd | sed 's|^\./||'; else $fd_cmd | sed 's|^\./||'; $rg_cmd | sed 's|^\./||'; fi | sort)")
+      --header="[ctrl-l] send files to grep buffer | [enter] open file/enter directory" \
+      --bind "ctrl-l:execute(rg --hidden --no-ignore -l '' . --max-depth 1 | sed 's|^\./||' | fzf --filter={q} | sed 's|$|:1:1:|' | kks-pipe-to-grep-buffer)+abort")
 
   # Store the current absolute path before changing directory back
   current_abs_dir="$current_dir"
