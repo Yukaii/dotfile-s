@@ -174,7 +174,6 @@ map global find-actions -docstring 'live grep all files(fzf)'          'W'  ':kk
 map global find-actions -docstring 'browse file on github'             'B'  ':browse_github<ret>'
 map global find-actions -docstring 'file types'                        'y'  ':kks-connect terminal-popup kks-filetypes<ret>'
 map global find-actions -docstring 'file inside buffer basefolder'     'p'  ':basefolder-files<ret>'
-map global find-actions -docstring 'file under buffer basefolder'      'P'  ':basefolder-top-files<ret>'
 map global find-actions -docstring 'edit file under buffer basefolder' 'e'  ':basefolder-edit<ret>'
 map global find-actions -docstring 'switch themes'                     'S'  ':colorscheme<space>'
 map global find-actions -docstring 'PR changed files'                  'c'  ':kks-connect terminal-popup kks-pr-diff-files<ret>'
@@ -183,14 +182,7 @@ map global find-actions -docstring 'file types'                        's'  ':kk
 define-command basefolder-files -docstring 'file inside buffer basefolder' %{
 	evaluate-commands %sh{
     dir=$(dirname "$kak_bufname")
-    echo "kks-connect terminal-popup kks-files --max-depth=1 \"$dir\""
-	}
-}
-
-define-command basefolder-top-files -docstring 'toplevel file inside buffer basefolder' %{
-	evaluate-commands %sh{
-    dir=$(dirname "$(dirname "$kak_bufname")")
-    echo "kks-connect terminal-popup kks-files --max-depth=1 \"$dir\""
+    echo "kks-connect terminal-popup kks-files-navigation \"$dir\""
 	}
 }
 

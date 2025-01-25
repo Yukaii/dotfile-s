@@ -1,0 +1,56 @@
+#!/bin/sh
+#
+# pick files with folder navigation support
+#
+# requires:
+# - rg (https://github.com/BurntSushi/ripgrep)
+# - fzf (https://github.com/junegunn/fzf)
+# - bat (https://github.com/sharkdp/bat)
+# - fd (https://github.com/sharkdp/fd)
+# - eza (https://github.com/eza-community/eza)
+
+preview_cmd="bat --color=always --line-range=:500"
+folder_preview_cmd="eza --all --icons --oneline --group-directories-first"
+history_file="$HOME/.cache/kks-files-history"
+current_dir="${1:-.}"  # Use first argument as starting directory, or current directory if not provided
+
+[ -f "$history_file" ] || touch "$history_file"
+
+while true; do
+  # Generate the file/folder list
+  # 1. List parent directory as '..'
+  # 2. List directories with trailing '/'
+  # 3. List regular files
+  file_list=$(printf "..\n"; fd --hidden --no-ignore . "$current_dir" -d 1 --type d --strip-cwd-prefix; rg --hidden --no-ignore -l '' "$current_dir" --max-depth 1)
+
+  selected=$(echo "$file_list" | \
+    fzf --height 100% --highlight-line --prompt "files ($current_dir)> " \
+      --preview "if [ -d {} ]; then $folder_preview_cmd {}; else $preview_cmd {}; fi" \
+      --history="$history_file" \
+      --header="[ctrl-l] send files to grep buffer | [enter] open file/enter directory" \
+      --bind "ctrl-l:execute(rg --hidden --no-ignore -l '' \"$current_dir\" --max-depth 1 | fzf --filter={q} | sed 's|$|:1:1:|' | kks-pipe-to-grep-buffer)+abort")
+
+  # Exit if no selection made
+  [ -z "$selected" ] && exit 0
+
+  # Handle selection
+  if [ "$selected" = ".." ]; then
+    # Navigate to parent directory
+    current_dir="$(realpath "$current_dir"/..)"
+  elif [ -d "$selected" ]; then
+    # Navigate into selected directory
+    if [ -d "$current_dir/$selected" ]; then
+      current_dir="$current_dir/$selected"
+    else
+      current_dir="$selected"
+    fi
+  else
+    # Open selected file
+    if [ -f "$current_dir/$selected" ]; then
+      kks edit "$current_dir/$selected"
+    else
+      kks edit "$selected"
+    fi
+    exit 0
+  fi
+done
