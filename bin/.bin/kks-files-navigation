@@ -23,11 +23,59 @@ current_dir="$(realpath "$current_dir")"
 # Initial state: show hidden files
 show_hidden=1
 
-# Function to get relative path from start_dir
+# Function to get relative path from base to target
 get_relative_path() {
-  local target="$1"
-  local base="$2"
-  python3 -c "import os.path; print(os.path.relpath('$target', '$base'))"
+  local target="$(realpath "$1")"
+  local base="$(realpath "$2")"
+
+  # Split paths into components
+  local IFS=/
+  set -- $target
+  local target_parts="$@"
+  set -- $base
+  local base_parts="$@"
+
+  # Count common path components
+  local common=0
+  local b t
+  for b in $base_parts; do
+    set -- $target_parts
+    t="$1"
+    if [ "$b" = "$t" ]; then
+      common=$((common + 1))
+      shift
+      target_parts="$@"
+    else
+      break
+    fi
+  done
+
+  # Calculate remaining base path components
+  set -- $base_parts
+  while [ $common -gt 0 ]; do
+    shift
+    common=$((common - 1))
+  done
+  local base_remainder="$@"
+
+  # Build the relative path
+  local result=""
+  for b in $base_remainder; do
+    result="${result}../"
+  done
+
+  # Add remaining target path
+  if [ -n "$target_parts" ]; then
+    result="${result}${target_parts// //}"
+  fi
+
+  # Handle special cases
+  if [ -z "$result" ]; then
+    echo "."
+  else
+    # Remove trailing slash if present
+    echo "${result%/}"
+  fi
 }
 
 # Function to get display path
