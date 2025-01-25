@@ -12,37 +12,71 @@
 preview_cmd="bat --color=always --line-range=:500"
 folder_preview_cmd="eza --icons --oneline --group-directories-first"
 history_file="$HOME/.cache/kks-files-history"
+start_dir="$(pwd)"  # Remember the starting directory
 current_dir="${1:-.}"  # Use first argument as starting directory, or current directory if not provided
+
+# Convert current_dir to absolute path
+current_dir="$(realpath "$current_dir")"
 
 [ -f "$history_file" ] || touch "$history_file"
 
 # Initial state: show hidden files
 show_hidden=1
 
+# Function to get relative path from start_dir
+get_relative_path() {
+  local target="$1"
+  local base="$2"
+  python3 -c "import os.path; print(os.path.relpath('$target', '$base'))"
+}
+
+# Function to get display path
+get_display_path() {
+  local abs_path="$1"
+  # If the path is under start_dir, show relative path
+  if echo "$abs_path" | grep -q "^$start_dir"; then
+    get_relative_path "$abs_path" "$start_dir"
+  else
+    # If we've gone above start_dir, show absolute path
+    echo "$abs_path"
+  fi
+}
+
 while true; do
+  display_path="$(get_display_path "$current_dir")"
+
+  # Change to current directory for relative operations
+  cd "$current_dir" || exit 1
+
   # Set the commands based on hidden files state
   if [ "$show_hidden" -eq 1 ]; then
-    fd_cmd="fd --hidden --no-ignore --type d --max-depth 1 . \"$current_dir\""
-    rg_cmd="rg --hidden --no-ignore -l '' \"$current_dir\" --max-depth 1"
+    fd_cmd="fd --hidden --no-ignore --type d --max-depth 1 . --strip-cwd-prefix"
+    rg_cmd="rg --hidden --no-ignore -l '' . --max-depth 1"
     folder_preview_current="$folder_preview_cmd --all"
     hidden_status="hidden:on"
   else
-    fd_cmd="fd --type d --max-depth 1 . \"$current_dir\""
-    rg_cmd="rg -l '' \"$current_dir\" --max-depth 1"
+    fd_cmd="fd --type d --max-depth 1 . --strip-cwd-prefix"
+    rg_cmd="rg -l '' . --max-depth 1"
     folder_preview_current="$folder_preview_cmd"
     hidden_status="hidden:off"
   fi
 
   # Generate the file/folder list
-  file_list=$(printf "..\n"; eval "$fd_cmd"; eval "$rg_cmd")
+  file_list=$(printf "..\n"; (eval "$fd_cmd" | sed 's|^\./||'; eval "$rg_cmd" | sed 's|^\./||') | sort)
 
   selected=$(echo "$file_list" | \
-    fzf --height 100% --highlight-line --prompt "files ($current_dir)> " \
+    fzf --height 100% --highlight-line --prompt "files ($display_path)> " \
       --preview "if [ -d {} ]; then $folder_preview_current {}; else $preview_cmd {}; fi" \
       --history="$history_file" \
       --header="[ctrl-l] send files to grep buffer | [enter] open file/enter directory | [ctrl-h] toggle hidden ($hidden_status)" \
-      --bind "ctrl-l:execute($rg_cmd | fzf --filter={q} | sed 's|$|:1:1:|' | kks-pipe-to-grep-buffer)+abort" \
-      --bind "ctrl-h:reload(printf '..\n'; show_hidden=\$(( 1 - show_hidden )); if [ \$show_hidden -eq 1 ]; then fd --hidden --no-ignore --type d --max-depth 1 . \"$current_dir\"; rg --hidden --no-ignore -l '' \"$current_dir\" --max-depth 1; else fd --type d --max-depth 1 . \"$current_dir\"; rg -l '' \"$current_dir\" --max-depth 1; fi)")
+      --bind "ctrl-l:execute($rg_cmd | sed 's|^\./||' | fzf --filter={q} | sed 's|$|:1:1:|' | kks-pipe-to-grep-buffer)+abort" \
+      --bind "ctrl-h:reload(printf '..\n'; show_hidden=\$(( 1 - show_hidden )); if [ \$show_hidden -eq 1 ]; then $fd_cmd | sed 's|^\./||'; $rg_cmd | sed 's|^\./||'; else $fd_cmd | sed 's|^\./||'; $rg_cmd | sed 's|^\./||'; fi | sort)")
+
+  # Store the current absolute path before changing directory back
+  current_abs_dir="$current_dir"
+
+  # Change back to the start directory
+  cd "$start_dir" || exit 1
 
   # Exit if no selection made
   [ -z "$selected" ] && exit 0
@@ -50,21 +84,20 @@ while true; do
   # Handle selection
   if [ "$selected" = ".." ]; then
     # Navigate to parent directory
-    current_dir="$(realpath "$current_dir"/..)"
+    current_dir="$(realpath "$current_abs_dir"/..)"
+  elif [ -d "$current_abs_dir/$selected" ]; then
+    # Navigate into selected directory (relative path)
+    current_dir="$(realpath "$current_abs_dir/$selected")"
   elif [ -d "$selected" ]; then
-    # Navigate into selected directory
-    if [ -d "$current_dir/$selected" ]; then
-      current_dir="$current_dir/$selected"
-    else
-      current_dir="$selected"
-    fi
+    # Navigate into selected directory (absolute path)
+    current_dir="$(realpath "$selected")"
+  elif [ -f "$current_abs_dir/$selected" ]; then
+    # Open selected file (relative path)
+    kks edit "$current_abs_dir/$selected"
+    exit 0
   else
-    # Open selected file
-    if [ -f "$current_dir/$selected" ]; then
-      kks edit "$current_dir/$selected"
-    else
-      kks edit "$selected"
-    fi
+    # Open selected file (absolute path)
+    kks edit "$selected"
     exit 0
   fi
 done
