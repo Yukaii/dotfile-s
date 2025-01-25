@@ -10,25 +10,39 @@
 # - eza (https://github.com/eza-community/eza)
 
 preview_cmd="bat --color=always --line-range=:500"
-folder_preview_cmd="eza --all --icons --oneline --group-directories-first"
+folder_preview_cmd="eza --icons --oneline --group-directories-first"
 history_file="$HOME/.cache/kks-files-history"
 current_dir="${1:-.}"  # Use first argument as starting directory, or current directory if not provided
 
 [ -f "$history_file" ] || touch "$history_file"
 
+# Initial state: show hidden files
+show_hidden=1
+
 while true; do
+  # Set the commands based on hidden files state
+  if [ "$show_hidden" -eq 1 ]; then
+    fd_cmd="fd --hidden --no-ignore --type d --max-depth 1 . \"$current_dir\""
+    rg_cmd="rg --hidden --no-ignore -l '' \"$current_dir\" --max-depth 1"
+    folder_preview_current="$folder_preview_cmd --all"
+    hidden_status="hidden:on"
+  else
+    fd_cmd="fd --type d --max-depth 1 . \"$current_dir\""
+    rg_cmd="rg -l '' \"$current_dir\" --max-depth 1"
+    folder_preview_current="$folder_preview_cmd"
+    hidden_status="hidden:off"
+  fi
+
   # Generate the file/folder list
-  # 1. List parent directory as '..'
-  # 2. List directories with trailing '/'
-  # 3. List regular files
-  file_list=$(printf "..\n"; fd --hidden --no-ignore . "$current_dir" -d 1 --type d --strip-cwd-prefix; rg --hidden --no-ignore -l '' "$current_dir" --max-depth 1)
+  file_list=$(printf "..\n"; eval "$fd_cmd"; eval "$rg_cmd")
 
   selected=$(echo "$file_list" | \
     fzf --height 100% --highlight-line --prompt "files ($current_dir)> " \
-      --preview "if [ -d {} ]; then $folder_preview_cmd {}; else $preview_cmd {}; fi" \
+      --preview "if [ -d {} ]; then $folder_preview_current {}; else $preview_cmd {}; fi" \
       --history="$history_file" \
-      --header="[ctrl-l] send files to grep buffer | [enter] open file/enter directory" \
-      --bind "ctrl-l:execute(rg --hidden --no-ignore -l '' \"$current_dir\" --max-depth 1 | fzf --filter={q} | sed 's|$|:1:1:|' | kks-pipe-to-grep-buffer)+abort")
+      --header="[ctrl-l] send files to grep buffer | [enter] open file/enter directory | [ctrl-h] toggle hidden ($hidden_status)" \
+      --bind "ctrl-l:execute($rg_cmd | fzf --filter={q} | sed 's|$|:1:1:|' | kks-pipe-to-grep-buffer)+abort" \
+      --bind "ctrl-h:reload(printf '..\n'; show_hidden=\$(( 1 - show_hidden )); if [ \$show_hidden -eq 1 ]; then fd --hidden --no-ignore --type d --max-depth 1 . \"$current_dir\"; rg --hidden --no-ignore -l '' \"$current_dir\" --max-depth 1; else fd --type d --max-depth 1 . \"$current_dir\"; rg -l '' \"$current_dir\" --max-depth 1; fi)")
 
   # Exit if no selection made
   [ -z "$selected" ] && exit 0
