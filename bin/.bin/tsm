@@ -57,7 +57,7 @@ popup() {
     # Configure inner tmux session
     configure_inner_tmux() {
         local clipboard_cmd="$(get_clipboard_command)"
-        
+
         tmux set-option -t "$session_name" -g set-clipboard on \;\
              set-option -t "$session_name" -g allow-passthrough on
 
