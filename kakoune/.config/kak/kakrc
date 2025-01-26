@@ -102,6 +102,23 @@ map global normal <c-y> ':execute-keys vk<ret>'                  -docstring 'scr
 map global normal <c-w> ':enter-user-mode window-actions<ret>'   -docstring 'window actions'
 map global normal X     ':execute-keys xH<ret>'                  -docstring 'Select till line end'
 
+# Cursor movement
+map global insert <c-a> <home>
+map global insert <c-e> <end>
+map global insert <c-b> <left>
+map global insert <c-f> <right>
+
+# Word movement
+map global insert <a-b> '<esc>bhli'  # Move backward one word and return to insert mode
+map global insert <a-f> '<esc>: try %{ exec El } catch %{ exec l }; exec i<ret>'
+
+# Text manipulation
+map global insert <c-w> '<esc>bc'  # Delete previous word
+map global insert <c-u> '<esc><a-h>c'  # Delete from cursor to beginning of line
+map global insert <c-k> '<esc><a-l>c'  # Delete from cursor to end of line
+map global insert <c-h> <backspace>  # Delete previous character
+map global insert <c-d> <del>      # Delete current character
+
 # Move line up/down
 map global normal <a-up>   'x"aZy<a-;>kPZ"azdz'
 map global normal <a-down> 'xdp'
@@ -175,7 +192,7 @@ map global find-actions -docstring 'browse file on github'             'B'  ':br
 map global find-actions -docstring 'file types'                        'y'  ':kks-connect terminal-popup kks-filetypes<ret>'
 map global find-actions -docstring 'file inside buffer basefolder'     'e'  ':basefolder-files<ret>'
 map global find-actions -docstring 'file inside project root'          'E'  ':kks-connect terminal-popup kks-files-navigation<ret>'
-# map global find-actions -docstring 'edit file under buffer basefolder' 'e'  ':basefolder-edit<ret>'
+map global find-actions -docstring 'edit file under buffer basefolder' 'p'  ':basefolder-edit<ret>'
 map global find-actions -docstring 'switch themes'                     'S'  ':colorscheme<space>'
 map global find-actions -docstring 'PR changed files'                  'c'  ':kks-connect terminal-popup kks-pr-diff-files<ret>'
 map global find-actions -docstring 'symbols'                           's'  ':kks-connect terminal-popup kks-symbols<ret>'
