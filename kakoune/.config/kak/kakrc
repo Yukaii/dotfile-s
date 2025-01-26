@@ -94,13 +94,17 @@ define-command edit-config -docstring 'edit config' %{
 }
 
 
-# Normal mode commands
-
-# muscle memories
+# muscle memories from vim
 map global normal <c-e> ':execute-keys vj<ret>'                  -docstring 'scroll oneline down'
 map global normal <c-y> ':execute-keys vk<ret>'                  -docstring 'scroll oneline down'
 map global normal <c-w> ':enter-user-mode window-actions<ret>'   -docstring 'window actions'
 map global normal X     ':execute-keys xH<ret>'                  -docstring 'Select till line end'
+
+# Move line up/down
+map global normal <a-up>   'x"aZy<a-;>kPZ"azdz'
+map global normal <a-down> 'xdp'
+
+# Edit mode bash shortcuts
 
 # Cursor movement
 map global insert <c-a> <home>
@@ -114,14 +118,10 @@ map global insert <a-f> '<esc>: try %{ exec El } catch %{ exec l }; exec i<ret>'
 
 # Text manipulation
 map global insert <c-w> '<esc>bc'  # Delete previous word
-map global insert <c-u> '<esc><a-h>c'  # Delete from cursor to beginning of line
+map global insert <c-u> '<esc><a-h>di'  # Delete from cursor to beginning of line
 map global insert <c-k> '<esc><a-l>c'  # Delete from cursor to end of line
 map global insert <c-h> <backspace>  # Delete previous character
 map global insert <c-d> <del>      # Delete current character
-
-# Move line up/down
-map global normal <a-up>   'x"aZy<a-;>kPZ"azdz'
-map global normal <a-down> 'xdp'
 
 # Terminal actions
 declare-user-mode terminal-actions
