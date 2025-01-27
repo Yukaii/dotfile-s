@@ -32,6 +32,10 @@ set-option global lsp_auto_show_code_actions true
 
 hook -group lsp-filetype-javascript global BufSetOption filetype=(?:javascript|typescript) %{
   set-option buffer lsp_servers %{
+    [biome]
+    root_globs = ["biome.json", "package.json", "tsconfig.json", "jsconfig.json", ".git", ".hg"]
+    args = ["lsp-proxy"]
+
     [typescript-language-server]
     root_globs = ["package.json", "tsconfig.json", "jsconfig.json", ".git", ".hg"]
     args = ["--stdio"]
