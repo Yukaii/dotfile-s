@@ -34,43 +34,6 @@ popup() {
     session_name="floating_${current_session_name}_${window_id}"
     startup_command="$1"
 
-    # Detect clipboard command
-    get_clipboard_command() {
-        case "$(uname -s)" in
-            Darwin*) echo "pbcopy" ;;  # macOS
-            Linux*)
-                if [ -n "$WAYLAND_DISPLAY" ]; then
-                    echo "wl-copy"  # Wayland
-                elif command -v xclip >/dev/null; then
-                    echo "xclip -selection clipboard"  # X11 with xclip
-                elif command -v xsel >/dev/null; then
-                    echo "xsel -b"  # X11 with xsel
-                elif grep -q Microsoft /proc/version; then
-                    echo "clip.exe"  # WSL
-                fi
-                ;;
-            CYGWIN*|MINGW*|MSYS*) echo "clip.exe" ;;  # Windows
-            *) echo "" ;;  # Unknown OS
-        esac
-    }
-
-    # Configure inner tmux session
-    configure_inner_tmux() {
-        local clipboard_cmd="$(get_clipboard_command)"
-
-        tmux set-option -t "$session_name" -g set-clipboard on \;\
-             set-option -t "$session_name" -g allow-passthrough on
-
-        # Only set up bindings if clipboard command exists
-        if [ -n "$clipboard_cmd" ]; then
-            tmux bind-key -T copy-mode-vi Enter send-keys -X copy-pipe "$clipboard_cmd" \;\
-                 bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe "$clipboard_cmd" \;\
-                 bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "$clipboard_cmd"
-        else
-            echo "Warning: No clipboard tool found for this platform!"
-        fi
-    }
-
     # Common session creation logic
     create_session() {
         if [ -z "$startup_command" ]; then
@@ -89,7 +52,6 @@ popup() {
             if [ -z "$target_pane" ]; then
                 window_name=$(echo "$startup_command" | cut -d' ' -f1)
                 tmux new-window -t "$session_name" -n "$window_name" -c "$parent_session_dir" "$startup_command"
-                configure_inner_tmux
             else
                 switch_command="tmux select-window -t $(tmux display-message -p -F "#{window_index}" -t"$target_pane") ;"
             fi

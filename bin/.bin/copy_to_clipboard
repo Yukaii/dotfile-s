@@ -1,10 +1,48 @@
 #!/bin/bash
 
-# Check if an argument was provided
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <string_to_copy>"
-    exit 1
+# Detect clipboard command
+get_clipboard_command() {
+  case "$(uname -s)" in
+    Darwin*) echo "pbcopy" ;;               # macOS
+    Linux*)
+      if [ -n "$WAYLAND_DISPLAY" ]; then
+        echo "wl-copy"                  # Wayland
+      elif command -v xclip >/dev/null; then
+        echo "xclip -selection clipboard -i"  # X11 with xclip
+      elif command -v xsel >/dev/null; then
+        echo "xsel --clipboard --input" # X11 with xsel
+      elif grep -q Microsoft /proc/version; then
+        echo "clip.exe"                 # WSL
+      fi
+      ;;
+    CYGWIN*|MINGW*|MSYS*) echo "clip.exe" ;;# Windows
+    *) echo "" ;;                           # Unknown OS
+  esac
+}
+
+# Get platform-appropriate clipboard command
+clipboard_cmd=$(get_clipboard_command)
+
+# Check if we have a valid clipboard command
+if [ -z "$clipboard_cmd" ]; then
+  echo "Error: No suitable clipboard command found!" >&2
+  exit 1
 fi
 
-# Copy the argument to the clipboard using pbcopy
-echo "$1" | pbcopy
+# Read from stdin if piped/redirected
+if [ ! -t 0 ]; then
+  # Read from pipe/input
+  $clipboard_cmd
+  exit $?
+fi
+
+# Read from argument
+if [ "$#" -eq 0 ]; then
+  echo "Error: No input provided!" >&2
+  echo "Usage: $0 <string_to_copy>"
+  echo "       or pipe input to this script"
+  exit 1
+fi
+
+# Copy the argument
+echo -n "$*" | $clipboard_cmd
