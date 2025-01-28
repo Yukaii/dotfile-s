@@ -47,3 +47,5 @@ bombdadillo/.config/*
 lazygit/**/state*
 
 broot/.config/broot/launcher/
+
+!aider/*.*

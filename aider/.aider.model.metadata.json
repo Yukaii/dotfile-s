@@ -1,0 +1,19 @@
+{
+  "groq/deepseek-r1-distill-llama-70b": {
+    "edit_format": "diff",
+    "weak_model_name": "groq/llama3-8b-8192",
+    "use_repo_map": false,
+    "send_undo_reply": false,
+    "lazy": false,
+    "reminder": "user",
+    "examples_as_sys_msg": true,
+    "extra_params": null,
+    "cache_control": false,
+    "caches_by_default": false,
+    "use_system_prompt": true,
+    "use_temperature": true,
+    "streaming": true,
+    "editor_model_name": null,
+    "editor_edit_format": null
+  }
+}
