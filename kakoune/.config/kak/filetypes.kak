@@ -12,13 +12,19 @@ hook global BufCreate .*\.env.* %{
 }
 
 hook global BufOpenFile .* %{
-    evaluate-commands %sh{
-        # Check if the current buffer file path ends with "ghostty/config"
-        if [[ "${kak_buffile}" == *"/ghostty/config" ]]; then
-            # Set the buffer filetype to toml
-            printf "set-option buffer filetype 'toml'\n"
-        fi
-    }
+  evaluate-commands %sh{
+    # Check if the current buffer file path ends with "ghostty/config"
+    if [[ "${kak_buffile}" == *"/ghostty/config" ]]; then
+      # Set the buffer filetype to toml
+      printf "set-option buffer filetype 'toml'\n"
+    fi
+
+    # Check if the file is exactly bun.lock
+    if [[ "$(basename "${kak_buffile}")" == "bun.lock" ]]; then
+      # Set the buffer filetype to json
+      printf "set-option buffer filetype 'json'\n"
+    fi
+  }
 }
 
 hook global BufCreate .*[.](glsl) %{
