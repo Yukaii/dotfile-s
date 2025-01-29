@@ -1,0 +1,27 @@
+GOOSE_MODEL: claude-3-5-sonnet-latest
+GOOSE_PROVIDER: anthropic
+extensions:
+  developer:
+    enabled: true
+    name: developer
+    type: builtin
+  fetch:
+    args:
+    - mcp-server-fetch
+    cmd: uvx
+    enabled: true
+    envs: {}
+    name: fetch
+    type: stdio
+  git:
+    args:
+    - mcp-server-git
+    cmd: uvx
+    enabled: true
+    envs: {}
+    name: git
+    type: stdio
+  memory:
+    enabled: true
+    name: memory
+    type: builtin
