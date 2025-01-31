@@ -18,3 +18,5 @@ source "$HOME/.config/broot/launcher/bash/br"
 
 # Added by Windsurf
 export PATH="/Users/yukai/.codeium/windsurf/bin:$PATH"
+
+source /Users/yukai/Library/Application\ Support/org.dystroy.broot/launcher/bash/br

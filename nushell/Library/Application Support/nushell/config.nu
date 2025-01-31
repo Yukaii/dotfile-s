@@ -896,3 +896,4 @@ $env.config = {
         }
     ]
 }
+use '/Users/yukai/Library/Application\ Support/org.dystroy.broot/launcher/nushell/br' *
